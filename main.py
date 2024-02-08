@@ -19,8 +19,8 @@ def cycle_graph_test(nodes: int = 20, m: int = 2, q: float = 0.5, infected: int 
     VG = nx.cycle_graph(nodes)
     IG = get_information_graph(PG, VG, q)
 
-    plot_all_graphs(PG, VG, IG)
-    infection(PG, 0.5, 0.5)
+    # plot_all_graphs(PG, VG, IG)
+    infection(PG, 0.2, 0.1)
 
 
 def scale_free_graph_test(nodes: int = 20, m: int = 5, q: float = 0.5, infected: int = 2):

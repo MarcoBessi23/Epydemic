@@ -3,6 +3,7 @@ import numpy as np
 import random as rd
 
 from matplotlib import pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 from src.utils import *
 
@@ -36,6 +37,21 @@ def get_infected(G: nx.Graph) -> int:
     return n
 
 
+def get_infected_neighbors(G: nx.Graph, node: int) -> int:
+    """
+    Count the number of infected neighbors of a node in the graph G
+
+    :param G: graph
+    :param node: list of neighbors
+    :return: return the number of infected neighbors
+    """
+    n = 0
+    for node in G.neighbors(node):
+        if G.nodes[node][state] == infected:
+            n += 1
+    return n
+
+
 def update_risk(G: nx.Graph, J: float, t: float) -> None:
     """
     Function to evaluate the risk perception of each node in the graph G
@@ -45,9 +61,8 @@ def update_risk(G: nx.Graph, J: float, t: float) -> None:
     :param t: tau value
     """
     for node in G.nodes:
-        neighbors = G.neighbors(node)
         k = G.degree(node)
-        s = get_infected(neighbors)
+        s = get_infected_neighbors(G, node)
         G.nodes[node][risk] = infected_prob(s, k, t, J)
 
 
@@ -126,12 +141,11 @@ def infection(G: nx.Graph,
     init_infected(G, infected_nodes)
 
     pos = nx.spring_layout(G)
-    fig, ax = plt.subplots()
+    plt.figure()
 
     for i in range(iteration):
         colors = [blue if G.nodes[node][state] == healthy else red for node in G]
-        ax.clear()
-        nx.draw(G, ax=ax, node_color=colors, with_labels=True, pos=pos)
+        nx.draw(G, node_color=colors, with_labels=True, pos=pos)
         plt.pause(1)
 
         update_risk(G, J, t)
@@ -139,4 +153,6 @@ def infection(G: nx.Graph,
         print(f"Step: {i + 1}, Infected: {get_infected(G)}")
         print(G.nodes.data())
         print("\n")
+
+
 
