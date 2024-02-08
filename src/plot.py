@@ -1,6 +1,8 @@
 import networkx as nx
 from matplotlib import pyplot as plt
 
+from src.utils import *
+
 
 def plot_graph(G: nx.Graph, pos: dict, ax, oriented: bool = False, show: bool = False) -> None:
     """
@@ -43,15 +45,13 @@ def plot_all_graphs(PG: nx.Graph, VG: nx.Graph, IG: nx.Graph) -> None:
     plt.show()
 
 
-def plot_update(G: nx.Graph, pos: dict, ax, show: bool = False) -> None:
+def plot_update(G: nx.Graph, pos: dict) -> None:
     """
     Plot the updated graph G
 
     :param G: graph
     :param pos: position of the nodes
-    :param ax: axis
-    :param show: if the graph should be displayed
     """
-    nx.draw(G, pos, ax=ax, node_color='cornflowerblue', with_labels=True)
-    if show:
-        plt.show()
+    colors = [blue if G.nodes[node][state] == healthy else red for node in G]
+    nx.draw(G, node_color=colors, with_labels=True, pos=pos)
+    plt.pause(1)

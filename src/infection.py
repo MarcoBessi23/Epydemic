@@ -5,6 +5,7 @@ import random as rd
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
 
+from src.plot import plot_update
 from src.utils import *
 
 
@@ -126,7 +127,7 @@ def infection(G: nx.Graph,
               J: float,
               t: float,
               iteration: int = 10,
-              infected_nodes: int = 2
+              infected_nodes: int = 1
               ) -> None:
     """
     Propagate the disease in the graph G
@@ -144,10 +145,7 @@ def infection(G: nx.Graph,
     plt.figure()
 
     for i in range(iteration):
-        colors = [blue if G.nodes[node][state] == healthy else red for node in G]
-        nx.draw(G, node_color=colors, with_labels=True, pos=pos)
-        plt.pause(1)
-
+        plot_update(G, pos)
         update_risk(G, J, t)
         G = new_infected(G)
         print(f"Step: {i + 1}, Infected: {get_infected(G)}")

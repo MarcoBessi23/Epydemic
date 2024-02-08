@@ -1,7 +1,6 @@
 import networkx as nx
 
 from src.infection import init_infected, get_information_graph, infection
-from src.plot import plot_all_graphs
 
 
 def cycle_graph_test(nodes: int = 20, m: int = 2, q: float = 0.5, infected: int = 2):
@@ -33,10 +32,12 @@ def scale_free_graph_test(nodes: int = 20, m: int = 5, q: float = 0.5, infected:
     :param infected:
     :return:
     """
-    PG = nx.scale_free_graph(nodes, m)
+    PG = nx.scale_free_graph(nodes)
     init_infected(PG, infected)
-    VG = nx.scale_free_graph(nodes, m)
+    VG = nx.scale_free_graph(nodes)
     IG = get_information_graph(PG, VG, q)
+
+    infection(PG, 0.2, 0.1)
 
 
 def main():
