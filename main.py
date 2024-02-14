@@ -1,12 +1,25 @@
 import networkx as nx
-import numpy as np
 
 from src.infection import init_infected, get_information_graph, infection
 
 
-def new_graph_test(nodes: int = 20, m: int = 2, q: float=0.5, infected: int=2):
-    "SANDRO"
-    return 1
+def barabasi_albert_graph_test(nodes: int = 10, m: int = 2, q: float = 0.5, infected: int = 2):
+    """
+    Test the Barabasi Albert graph
+
+    :param nodes:
+    :param m:
+    :param q:
+    :param infected:
+    :return:
+    """
+    PG = nx.barabasi_albert_graph(nodes, m)
+    init_infected(PG, infected)
+    VG = nx.barabasi_albert_graph(nodes, m)
+    IG = get_information_graph(PG, VG, q)
+
+    # plot_all_graphs(PG, VG, IG)
+    infection(PG, 0.2, 0.1)
 
 
 def cycle_graph_test(nodes: int = 20, m: int = 2, q: float = 0.5, infected: int = 2):
