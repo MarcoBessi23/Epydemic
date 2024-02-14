@@ -1,5 +1,4 @@
 import networkx as nx
-import numpy as np
 
 from src.infection import init_infected, get_information_graph, infection
 from src.plot import plot_all_graphs, plot_graph
