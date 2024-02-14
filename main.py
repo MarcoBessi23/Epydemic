@@ -4,6 +4,11 @@ import numpy as np
 from src.infection import init_infected, get_information_graph, infection
 
 
+def new_graph_test(nodes: int = 20, m: int = 2, q: float=0.5, infected: int=2):
+    "SANDRO"
+    return 1
+
+
 def cycle_graph_test(nodes: int = 20, m: int = 2, q: float = 0.5, infected: int = 2):
     """
     Test the cycle graph
