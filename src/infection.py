@@ -3,13 +3,23 @@ import numpy as np
 import random as rd
 
 from matplotlib import pyplot as plt
-from matplotlib.animation import FuncAnimation
 
 from src.plot import plot_update
 from src.utils import *
 
 
-def init_infected(G: nx.Graph, n: int = 10) -> None:
+def critical_j(k: int, t: float) -> float:
+    """
+    Compute the critical J value
+
+    :param k: degree
+    :param t: bare infection probability
+    :return: return the critical J value
+    """
+    return k * np.log(k*t)
+
+
+def init_infected(G: nx.Graph, n: int = 1) -> None:
     """
     Initialize the graph G with n infected nodes
 
@@ -58,8 +68,8 @@ def update_risk(G: nx.Graph, J: float, t: float) -> None:
     Function to evaluate the risk perception of each node in the graph G
 
     :param G: graph
-    :param J: J value
-    :param t: tau value
+    :param J: perception risk
+    :param t: bare infection probability
     """
     for node in G.nodes:
         k = G.degree(node)
@@ -73,8 +83,8 @@ def infected_prob(s: int, k: int, t: float, J: float) -> float:
 
     :param s: number of infected neighbors
     :param k: degree of the node
-    :param t: tau value
-    :param J: J value
+    :param t: bare infection probability
+    :param J: perception risk
     :return: return the probability of being infected
     """
     return t * np.exp(-J * s / k)
@@ -133,8 +143,8 @@ def infection(G: nx.Graph,
     Propagate the disease in the graph G
 
     :param G: graph
-    :param J: J value
-    :param t: tau value
+    :param J: perception risk
+    :param t: bare infection probability
     :param iteration: number of iterations, default 10
     :param infected_nodes: number of infected nodes, default 2
     :return:
