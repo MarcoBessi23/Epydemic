@@ -25,7 +25,7 @@ def cycle_graph_test(nodes: int = 20, m: int = 2, q: float = 0.5, infected: int 
     infection(PG, 0.2, 0.1)
 
 
-#Aggiunto scale free come nel paper?
+#Aggiunto scale free come nel paper? Non so cosa non funziona
 def scale_free_graph_test(nodes: int = 5, m: int = 5, q: float = 0.5, infected: int = 2):
     """
     Test the scale free graph
@@ -65,8 +65,8 @@ def random_graph_test(nodes: int = 10, p: int = 0.4, q: float = 0.5, infected: i
     
 def graph_boh_test():    
     n, t = 10, 2
-    while True:  # Continue generating sequences until one of them is graphical
-        seq = sorted([int(round(d)) for d in nx.powerlaw_sequence(n, t)], reverse=True)  # Round to nearest integer to obtain DISCRETE degree sequence
+    while True:  # Continue generating sequences until one of them is graphical, quando è graphical vuol dire che esiste un grafo che ha quella distribuzione
+        seq = sorted([int(round(d)) for d in nx.powerlaw_sequence(n, t)], reverse=True)  # Non funziona powerlaw sequence, prova sul tuo
         if nx.is_graphical(seq):
             break
     PG = nx.random_degree_sequence_graph(seq, tries=100)  # Adjust number of tries as you see fit
