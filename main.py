@@ -2,11 +2,8 @@ import networkx as nx
 import numpy as np
 
 from src.infection import init_infected, get_information_graph, infection
+from src.plot import plot_all_graphs, plot_graph
 
-
-def new_graph_test(nodes: int = 20, m: int = 2, q: float=0.5, infected: int=2):
-    "SANDRO"
-    return 1
 
 
 def cycle_graph_test(nodes: int = 20, m: int = 2, q: float = 0.5, infected: int = 2):
@@ -28,6 +25,7 @@ def cycle_graph_test(nodes: int = 20, m: int = 2, q: float = 0.5, infected: int 
     infection(PG, 0.2, 0.1)
 
 
+#Aggiunto scale free come nel paper?
 def scale_free_graph_test(nodes: int = 5, m: int = 5, q: float = 0.5, infected: int = 2):
     """
     Test the scale free graph
@@ -38,14 +36,12 @@ def scale_free_graph_test(nodes: int = 5, m: int = 5, q: float = 0.5, infected: 
     :param infected:
     :return:
     """
-    PG = nx.scale_free_graph(nodes)
-    PG = nx.to_undirected(PG)  # TODO: Check if it is necessary
+    PG = nx.powerlaw_cluster_graph(nodes, m, 0)
     init_infected(PG, infected)
-    VG = nx.scale_free_graph(nodes)
+    VG = nx.powerlaw_cluster_graph(nodes, m, 0)
     IG = get_information_graph(PG, VG, q)
-
+    plot_all_graphs(PG, 0.2, 0.1)
     infection(PG, 0.2, 0.1)
-
 
 def random_graph_test(nodes: int = 10, p: int = 0.4, q: float = 0.5, infected: int = 2):
     """
@@ -62,13 +58,25 @@ def random_graph_test(nodes: int = 10, p: int = 0.4, q: float = 0.5, infected: i
     VG = nx.gnp_random_graph(nodes, p)
     IG = get_information_graph(PG, VG, q)
 
-    # plot_all_graphs(PG, VG, IG)
+    #plot_all_graphs(PG, VG, IG)
     infection(PG, 0.2, 0.1)
+
+
+    
+def graph_boh_test():    
+    n, t = 10, 2
+    while True:  # Continue generating sequences until one of them is graphical
+        seq = sorted([int(round(d)) for d in nx.powerlaw_sequence(n, t)], reverse=True)  # Round to nearest integer to obtain DISCRETE degree sequence
+        if nx.is_graphical(seq):
+            break
+    PG = nx.random_degree_sequence_graph(seq, tries=100)  # Adjust number of tries as you see fit
+    #plot_graph(PG)
 
 
 def main():
     # cycle_graph_test()
-    scale_free_graph_test()
+     scale_free_graph_test()
+    # graph_boh_test()
     # random_graph_test() TODO: Check components graphs divided by zero
 
 
