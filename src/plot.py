@@ -55,3 +55,10 @@ def plot_update(G: nx.Graph, pos: dict) -> None:
     colors = [blue if G.nodes[node][state] == healthy else red for node in G]
     nx.draw(G, node_color=colors, with_labels=True, pos=pos)
     plt.pause(1)
+
+def plot_results(x,y):
+    plt(x,y)
+    plt.show()
+
+
+    

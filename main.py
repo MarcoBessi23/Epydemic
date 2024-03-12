@@ -1,11 +1,11 @@
 import networkx as nx
-
+import numpy as np
 from src.infection import init_infected, get_information_graph, infection
 from src.plot import plot_all_graphs, plot_graph
 
 
 
-def cycle_graph_test(nodes: int = 20, m: int = 2, q: float = 0.5, infected: int = 2):
+def cycle_graph_test(nodes: int = 20, m: int = 2, q: float = 0.5, infected: int = 3):
     """
     Test the cycle graph
 
@@ -21,26 +21,27 @@ def cycle_graph_test(nodes: int = 20, m: int = 2, q: float = 0.5, infected: int 
     IG = get_information_graph(PG, VG, q)
 
     # plot_all_graphs(PG, VG, IG)
-    infection(PG, 0.2, 0.1)
+    infection(PG, 0.2, 0.1, 0.3, immunity= False)
 
 
 #Aggiunto scale free come nel paper? Non so cosa non funziona
-def scale_free_graph_test(nodes: int = 5, m: int = 5, q: float = 0.5, infected: int = 2):
+def scale_free_graph_test(nodes: int = 5, m: int = 3, q: float = 0.5, infected: int = 2):
     """
     Test the scale free graph
-
+    
     :param nodes:
     :param m:
     :param q:
+    :param rec_prob:
     :param infected:
     :return:
     """
-    PG = nx.powerlaw_cluster_graph(nodes, m, 0)
+    PG = nx.barabasi_albert_graph(nodes, m)
     init_infected(PG, infected)
-    VG = nx.powerlaw_cluster_graph(nodes, m, 0)
+    VG = nx.barabasi_albert_graph(nodes,m)
     IG = get_information_graph(PG, VG, q)
     plot_all_graphs(PG, 0.2, 0.1)
-    infection(PG, 0.2, 0.1)
+    infection(PG, 0.2, 0.1, 0.3, immunity = False)
 
 def random_graph_test(nodes: int = 10, p: int = 0.4, q: float = 0.5, infected: int = 2):
     """
@@ -61,21 +62,30 @@ def random_graph_test(nodes: int = 10, p: int = 0.4, q: float = 0.5, infected: i
     infection(PG, 0.2, 0.1)
 
 
+risk_perceptions= np.arange(0,50)
+taus = np.arange(0, 1, 0.1)
+
+def get_J_critical(G: nx.graph,rec_prob= 0.2):
+    values = []
+    for t in taus:
+        j= 0
+        while(infection(G, j, t, rec_prob, immunity= False)>0 and j<len(risk_perceptions) ):
+            v = infection(G, j, t, rec_prob, immunity= False)
+            j= j+1
+        if v == 0:
+            values.append((t,j))
+    return values
+
+        
+            
+
     
-def graph_boh_test():    
-    n, t = 10, 2
-    while True:  # Continue generating sequences until one of them is graphical, quando è graphical vuol dire che esiste un grafo che ha quella distribuzione
-        seq = sorted([int(round(d)) for d in nx.powerlaw_sequence(n, t)], reverse=True)  # Non funziona powerlaw sequence, prova sul tuo
-        if nx.is_graphical(seq):
-            break
-    PG = nx.random_degree_sequence_graph(seq, tries=100)  # Adjust number of tries as you see fit
-    #plot_graph(PG)
 
 
 def main():
-    # cycle_graph_test()
-     scale_free_graph_test()
-    # graph_boh_test()
+    taus = np.arange(0, 1, 0.1)
+    #cycle_graph_test()
+    scale_free_graph_test()
     # random_graph_test() TODO: Check components graphs divided by zero
 
 

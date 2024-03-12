@@ -101,10 +101,26 @@ def new_infected(G: nx.Graph) -> nx.Graph:
     for node in G.nodes:
         u = G.nodes[node][risk]
         r = np.random.uniform(0, 1)
-        if r < u:
+        if r < u and G.nodes[node][state]== healthy:
             next_graph.nodes[node][state] = infected
     return next_graph
 
+
+def immunization(G: nx.Graph, rec_prob):
+    next_graph = G.copy()
+    for node in G.nodes:
+        r = np.random.uniform(0, 1)
+        if G.nodes[node][state] == infected and r< rec_prob:
+            next_graph.nodes[node][state] = recovered
+    return next_graph
+
+def recovering(G: nx.Graph, rec_prob):
+    next_graph = G.copy()
+    for node in G.nodes:
+        r = np.random.uniform(0, 1)
+        if G.nodes[node][state] == infected and r< rec_prob:
+            next_graph.nodes[node][state] = healthy
+    return next_graph
 
 def get_information_graph(PG: nx.Graph, VG: nx.Graph, q: float) -> nx.Graph:
     """
@@ -136,6 +152,8 @@ def get_information_graph(PG: nx.Graph, VG: nx.Graph, q: float) -> nx.Graph:
 def infection(G: nx.Graph,
               J: float,
               t: float,
+              rec_prob: float,
+              immunity: bool,
               iteration: int = 10,
               infected_nodes: int = 1
               ) -> None:
@@ -145,6 +163,8 @@ def infection(G: nx.Graph,
     :param G: graph
     :param J: perception risk
     :param t: bare infection probability
+    :param rec_prob: prob of recovering at each step
+    :immunity: True if immunity is possible
     :param iteration: number of iterations, default 10
     :param infected_nodes: number of infected nodes, default 2
     :return:
@@ -154,13 +174,25 @@ def infection(G: nx.Graph,
     pos = nx.spring_layout(G)
     plt.figure()
 
-    for i in range(iteration):
-        plot_update(G, pos)
-        update_risk(G, J, t)
-        G = new_infected(G)
-        print(f"Step: {i + 1}, Infected: {get_infected(G)}")
-        print(G.nodes.data())
-        print("\n")
+    if immunity == False:
+        for i in range(iteration):
+            plot_update(G, pos)
+            update_risk(G, J, t)
+            G = new_infected(G)
+            G = recovering(G, rec_prob)
+            print(f"Step: {i + 1}, Infected: {get_infected(G)}")
+            print(G.nodes.data())
+            print("\n")
 
-
-
+    else :
+        for i in range(iteration):
+            plot_update(G, pos)
+            update_risk(G, J, t)
+            G = new_infected(G)
+            G = immunization(G, rec_prob)
+            print(f"Step: {i + 1}, Infected: {get_infected(G)}")
+            print(G.nodes.data())
+            print("\n")
+    
+    
+    return get_infected(G)

@@ -2,6 +2,7 @@
 state = "state"
 infected = "infected"
 healthy = "healthy"
+recovered = "recovered"
 risk = "risk"
 
 # Colors for the graph
