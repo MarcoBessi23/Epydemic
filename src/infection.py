@@ -16,7 +16,7 @@ def critical_j(k: int, t: float) -> float:
     :param t: bare infection probability
     :return: return the critical J value
     """
-    return k * np.log(k*t)
+    return k * np.log(k * t)
 
 
 def init_infected(G: nx.Graph, n: int = 1) -> None:
@@ -101,26 +101,27 @@ def new_infected(G: nx.Graph) -> nx.Graph:
     for node in G.nodes:
         u = G.nodes[node][risk]
         r = np.random.uniform(0, 1)
-        if r < u and G.nodes[node][state]== healthy:
+        if r < u and G.nodes[node][state] == healthy:
             next_graph.nodes[node][state] = infected
     return next_graph
 
 
-def immunization(G: nx.Graph, rec_prob):
+def change_state(G: nx.Graph, rec_prob: float, new_state: str) -> nx.Graph:
+    """
+    Change the state of all nodes in the graph G
+
+    :param G: graph
+    :param rec_prob: recovery probability
+    :param new_state: new state
+    :return: return the graph with the changed state
+    """
     next_graph = G.copy()
     for node in G.nodes:
         r = np.random.uniform(0, 1)
-        if G.nodes[node][state] == infected and r< rec_prob:
-            next_graph.nodes[node][state] = recovered
+        if G.nodes[node][state] == infected and r < rec_prob:
+            next_graph.nodes[node][state] = new_state
     return next_graph
 
-def recovering(G: nx.Graph, rec_prob):
-    next_graph = G.copy()
-    for node in G.nodes:
-        r = np.random.uniform(0, 1)
-        if G.nodes[node][state] == infected and r< rec_prob:
-            next_graph.nodes[node][state] = healthy
-    return next_graph
 
 def get_information_graph(PG: nx.Graph, VG: nx.Graph, q: float) -> nx.Graph:
     """
@@ -153,10 +154,11 @@ def infection(G: nx.Graph,
               J: float,
               t: float,
               rec_prob: float,
-              immunity: bool,
-              iteration: int = 10,
-              infected_nodes: int = 1
-              ) -> None:
+              iteration: int = 50,
+              infected_nodes: int = 1,
+              immunity: str = healthy,
+              plot: bool = False,
+              ) -> int:
     """
     Propagate the disease in the graph G
 
@@ -164,35 +166,24 @@ def infection(G: nx.Graph,
     :param J: perception risk
     :param t: bare infection probability
     :param rec_prob: prob of recovering at each step
-    :immunity: True if immunity is possible
     :param iteration: number of iterations, default 10
     :param infected_nodes: number of infected nodes, default 2
-    :return:
+    :param immunity: recovered if immunity is possible
+    :param plot: if the graph should be plotted
+    :return: return the number of infected nodes
     """
     init_infected(G, infected_nodes)
 
     pos = nx.spring_layout(G)
     plt.figure()
 
-    if immunity == False:
-        for i in range(iteration):
+    for i in range(iteration):
+        if plot:
             plot_update(G, pos)
-            update_risk(G, J, t)
-            G = new_infected(G)
-            G = recovering(G, rec_prob)
-            print(f"Step: {i + 1}, Infected: {get_infected(G)}")
-            print(G.nodes.data())
-            print("\n")
-
-    else :
-        for i in range(iteration):
-            plot_update(G, pos)
-            update_risk(G, J, t)
-            G = new_infected(G)
-            G = immunization(G, rec_prob)
-            print(f"Step: {i + 1}, Infected: {get_infected(G)}")
-            print(G.nodes.data())
-            print("\n")
-    
-    
+        update_risk(G, J, t)
+        G = new_infected(G)
+        G = change_state(G, rec_prob, immunity)
+        print(f"Step: {i + 1}, Infected: {get_infected(G)}")
+        print(G.nodes.data())
+        print("\n")
     return get_infected(G)

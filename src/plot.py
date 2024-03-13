@@ -15,10 +15,10 @@ def plot_graph(G: nx.Graph, pos: dict, ax, oriented: bool = False, show: bool = 
     :param show: if the graph should be displayed
     """
     if oriented:
-        nx.draw(G, pos, ax=ax, node_color='cornflowerblue', with_labels=True,
+        nx.draw(G, pos, ax=ax, node_color=blue, with_labels=True,
                 arrows=True, arrowstyle='->', arrowsize=10)
     else:
-        nx.draw(G, pos, ax=ax, node_color='cornflowerblue', with_labels=True,)
+        nx.draw(G, pos, ax=ax, node_color=blue, with_labels=True,)
     if show:
         plt.show()
 
@@ -52,12 +52,23 @@ def plot_update(G: nx.Graph, pos: dict) -> None:
     :param G: graph
     :param pos: position of the nodes
     """
-    colors = [blue if G.nodes[node][state] == healthy else red for node in G]
+    colors = [blue if G.nodes[node][state] == healthy else green if G.nodes[node][state] == recovered else red for node in G]
     nx.draw(G, node_color=colors, with_labels=True, pos=pos)
     plt.pause(1)
 
-def plot_results(x,y):
-    plt(x,y)
+
+def plot_critical_j(critics: dict) -> None:
+    """
+    Plot the critical J values
+
+    :param critics: dict of critical values
+    """
+    plt.title("Critical J values")
+    plt.plot(critics[t_test], critics[j_test], label="Critical J", color=blue, marker="o", linestyle="-")
+    plt.xlabel("Tau")
+    plt.ylabel("Jc")
+    plt.legend()
+    plt.savefig(path_plots + "critical_j.png")
     plt.show()
 
 
