@@ -39,7 +39,7 @@ def simple_percolation(G: nx.graph, tau: float, iterations: int):
     return G
 
 
-def simple_tau_percolation(G: nx.Graph, iterations: int):
+def simple_tau_percolation(G: nx.Graph, iterations: int) -> dict:
     """
     Update the values of tau parameters associated with the nodes in graph G based on simple percolation.
 
@@ -56,30 +56,23 @@ def simple_tau_percolation(G: nx.Graph, iterations: int):
     :param iterations: Number of iterations
     :return: Updated tau values for each node
     """
-    tau = np.zeros(nx.number_of_nodes(G))
+    tau = {node: 0.0 for node in G.nodes()}
 
-    # Iterate T times to update tau values
     for _ in range(iterations):
-        # Create a copy of tau to avoid overwriting values during iteration
         ct = tau.copy()
-
         # Iterate over each node in the graph
-        for i in range(len(tau)):
-            max_values = []
-
+        for i in G.nodes():
+            m = []
             # Iterate over neighbors of the node
             for j in G.neighbors(i):
                 r = np.random.uniform(0, 1)
-                max_values.append(max(r, ct[j]))
-
+                m.append(max(r, ct[j]))
             # Update tau[i] using the minimum of max_values
-            if max_values:
-                tau[i] = min(max_values)
-
+            tau[i] = min(m)
     return tau
 
 
-def critic_j_percolation(J: list, G: nx.Graph, tau: float, T: int):
+def critic_j_percolation(G: nx.Graph, tau: float, T: int) -> dict:
     """
     Calculate the critical J values for percolation.
 
@@ -89,26 +82,26 @@ def critic_j_percolation(J: list, G: nx.Graph, tau: float, T: int):
     Skipping the calculations, I directly move to formula (15), which is the one I want to implement.
     Ji (t + 1) = max min (Jj(t), (ki/si[Jj(t)]) * ln(rij(t)/τ)). si[J] is a function that sums [Jj(t) >= J] for all neighbors.
 
-    :param J: Initial J values for each node
+    # :param J: Initial J values for each node
     :param G: NetworkX graph
     :param tau: Infection probability
     :param T: Number of iterations
     :return: Updated critical J values
     """
 
-    for t in range(T):
-        j_copy = [G.nodes[node][j_value] for node in G.nodes()]
+    for _ in range(T):
+        j_copy = {node: G.nodes[node][j_value] for node in G.nodes()}
 
         for i in G.nodes():
             m = []
             k = G.degree(i)
             for j in G.neighbors(i):
-                s = sum(1 for neighbor in G.neighbors(i) if
-                        G.nodes[neighbor][j_value] > G.nodes[neighbor][j_value])  # Calculate sum term
+                s = sum(1 for k in G.neighbors(i) if
+                        j_copy[k] > j_copy[j])  # Calculate sum term
                 r = np.random.uniform(0, 1)
                 m.append(min(j_copy[j], (k / s) * np.log(r / tau)))  # Calculate min max term
-            G.nodes[i][j_value] = max(m)  # Update J with the maximum value calculated
-    return [G.nodes[node][j_value] for node in G.nodes()]
+            G[i][j_value] = max(m)  # Update J with the maximum value calculated
+    return {node: G.nodes[node][j_value] for node in G.nodes()}
 
                 
 
