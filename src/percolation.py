@@ -39,27 +39,44 @@ def simple_percolation(G: nx.graph, tau: float, iterations: int):
     return G
 
 
-#taui[t+1]=min max(rij(t),taui(t)) calcolato per ogni vicino del nodo i
-#Formula per aggiornare il valore tau[i] come indicato nella sezione simple percolation
-#tau è un vettore tale che la componente i di tau corrisponde al valore di tau per il nodo i
-#Partiamo dallo scenario in cui tutti i nodi sono infetti, quindi tau è un vettore di zeri. 
-#Copio il vettore tau in un vettore ctau così da non sovrasvrivere il valore di tau ad ogni iterazione del min max
-#La funzione nonzero ritorna indici corrispondenti ai vicini del nodo i, M è il vettore dei max da cui estraggo il
-#minimo
-def simple_tau_percolation(G: nx.graph, T: int):
-    tau = np.zeros(nx.number_of_nodes(G))
-    #Guardo le righe della matrice di adiacenza ad ogni iterazione per aggiornare il vettore 
-    A = nx.adjacency_matrix(G) 
-    for t in range(T):
-        ctau = tau
-        for i in range(len(tau)):
-            M = []
-            for j in range(np.nonzero(A[i])):
-                r = np.random.uniform(0,1)
-                M.append(np.max(r,ctau[j]))
-            tau[i] = np.min(M)
-    return tau
+def simple_tau_percolation(G: nx.Graph, iterations: int):
+    """
+    Update the values of tau parameters associated with the nodes in graph G based on simple percolation.
 
+    taui[t+1] = min max(rij(t), taui(t)) calculated for each neighbor of node i
+
+    This formula updates the value tau[i] as indicated in the simple percolation section.
+    Tau is a vector such that the i-th component of tau corresponds to the tau value for node i.
+    We start from the scenario where all nodes are infected, so tau is a vector of zeros.
+    I copy the tau vector into a vector ctau to avoid overwriting the value of tau at each iteration of the min max.
+    The nonzero function returns indices corresponding to the neighbors of node i.
+    M is the vector of max values from which I extract the minimum.
+
+    :param G: NetworkX graph
+    :param iterations: Number of iterations
+    :return: Updated tau values for each node
+    """
+    tau = np.zeros(nx.number_of_nodes(G))
+
+    # Iterate T times to update tau values
+    for _ in range(iterations):
+        # Create a copy of tau to avoid overwriting values during iteration
+        ct = tau.copy()
+
+        # Iterate over each node in the graph
+        for i in range(len(tau)):
+            max_values = []
+
+            # Iterate over neighbors of the node
+            for j in G.neighbors(i):
+                r = np.random.uniform(0, 1)
+                max_values.append(max(r, ct[j]))
+
+            # Update tau[i] using the minimum of max_values
+            if max_values:
+                tau[i] = min(max_values)
+
+    return tau
 
 
 #INFECTION WITH RISK PERCEPTION
@@ -85,6 +102,40 @@ def critic_J_percolation(J, G: nx.graph, tau: float, T: int):
                         s = s+1
                 m.append(np.min(cJ[j],(K/s)*np.log(r/tau)))
             J[i] = np.max(m)
+    return J
+
+
+def critic_J_percolation(J: list, G: nx.Graph, tau: float, T: int):
+    """
+    Calculate the critical J values for percolation.
+
+    I aim to determine the parameter J for which there is no long-term infection spread.
+    [J < −(k/s) ln(r/τ)] is the condition for a node to become infected.
+    In the function, I extract r and check if it equals 1. J[i] is the minimum value of J that causes node i to become infected.
+    Skipping the calculations, I directly move to formula (15), which is the one I want to implement.
+    Ji (t + 1) = max min (Jj(t), (ki/si[Jj(t)]) * ln(rij(t)/τ)). si[J] is a function that sums [Jj(t) >= J] for all neighbors.
+
+    :param J: Initial J values for each node
+    :param G: NetworkX graph
+    :param tau: Infection probability
+    :param T: Number of iterations
+    :return: Updated critical J values
+    """
+
+    for t in range(T):
+        cJ = J.copy()  # Create a copy of J to avoid overwriting values during iteration
+
+        for i in range(len(J)):
+            m = []
+            k = G.degree(i)  # Calculate the degree of node i
+
+            for j in range(len(J)):  # Iterate over neighbors of node i
+                s = sum(1 for k in range(len(J)) if cJ[k] > cJ[j])  # Count neighbors with J greater than J[j]
+                r = np.random.uniform(0, 1)
+                m.append(min(cJ[j], (k / s) * np.log(r / tau)))  # Calculate min max term
+
+            J[i] = max(m)  # Update J[i] with the maximum value calculated
+
     return J
 
                 
