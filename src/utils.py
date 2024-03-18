@@ -4,6 +4,7 @@ infected = "infected"
 healthy = "healthy"
 recovered = "recovered"
 risk = "risk"
+j_value = "J"
 
 # Constants for the tests
 t_test = "t_risk"

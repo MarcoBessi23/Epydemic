@@ -79,33 +79,7 @@ def simple_tau_percolation(G: nx.Graph, iterations: int):
     return tau
 
 
-#INFECTION WITH RISK PERCEPTION
-
-#Voglio ricavare parametro J per cui non c'è diffusione dell'infezione nel lungo periodo. 
-# [J < −(k/s) ln(r/τ )] <--- condizione per cui un nodo si infetta, nella funzione estraggo r e controllo 
-# se vale 1. J[i] è come sopra il valore minimo di J che fa infettare il nodo i. Salto i calcoli e vado
-# direttamente alla formula (15) che è quella che vado ad implementare 
-# Ji (t + 1) =max min (Jj(t), (ki/si[Jj(t)])*ln(rij(t)/τ))  si[J] è funzione che somma [Jj(t)>=J] per tutti i vicini
-
-def critic_J_percolation(J, G: nx.graph, tau: float, T: int):
-    A = nx.adjacency_matrix(G)
-    for t in range(T):
-        cJ = J
-        for i in range(len(J)):
-            m = []
-            K = np.sum(A[i])
-            for j in range(np.nonzero(A[i])):
-                s = 0
-                r = np.random.uniform(0,1)
-                for k in range(np.nonzero(A[i])):
-                    if cJ[k]>cJ[j]:
-                        s = s+1
-                m.append(np.min(cJ[j],(K/s)*np.log(r/tau)))
-            J[i] = np.max(m)
-    return J
-
-
-def critic_J_percolation(J: list, G: nx.Graph, tau: float, T: int):
+def critic_j_percolation(J: list, G: nx.Graph, tau: float, T: int):
     """
     Calculate the critical J values for percolation.
 
@@ -123,20 +97,18 @@ def critic_J_percolation(J: list, G: nx.Graph, tau: float, T: int):
     """
 
     for t in range(T):
-        cJ = J.copy()  # Create a copy of J to avoid overwriting values during iteration
+        j_copy = [G.nodes[node][j_value] for node in G.nodes()]
 
-        for i in range(len(J)):
+        for i in G.nodes():
             m = []
-            k = G.degree(i)  # Calculate the degree of node i
-
-            for j in range(len(J)):  # Iterate over neighbors of node i
-                s = sum(1 for k in range(len(J)) if cJ[k] > cJ[j])  # Count neighbors with J greater than J[j]
+            k = G.degree(i)
+            for j in G.neighbors(i):
+                s = sum(1 for neighbor in G.neighbors(i) if
+                        G.nodes[neighbor][j_value] > G.nodes[neighbor][j_value])  # Calculate sum term
                 r = np.random.uniform(0, 1)
-                m.append(min(cJ[j], (k / s) * np.log(r / tau)))  # Calculate min max term
-
-            J[i] = max(m)  # Update J[i] with the maximum value calculated
-
-    return J
+                m.append(min(j_copy[j], (k / s) * np.log(r / tau)))  # Calculate min max term
+            G.nodes[i][j_value] = max(m)  # Update J with the maximum value calculated
+    return [G.nodes[node][j_value] for node in G.nodes()]
 
                 
 

@@ -186,4 +186,5 @@ def infection(G: nx.Graph,
         print(f"Step: {i + 1}, Infected: {get_infected(G)}")
         print(G.nodes.data())
         print("\n")
+
     return get_infected(G)
