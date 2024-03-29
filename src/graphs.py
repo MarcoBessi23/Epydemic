@@ -36,7 +36,7 @@ def scale_free_graph_test(nodes: int = 5, m: int = 3, q: float = 0.5, infected: 
     return PG, VG, IG
 
 
-def random_graph_test(nodes: int = 10, p: int = 0.4, q: float = 0.5, infected: int = 2):
+def random_graph_test(nodes: int = 10, p: float = 0.4, q: float = 0.5, infected: int = 2):
     """
     Test the random graph
 

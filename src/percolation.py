@@ -8,6 +8,7 @@ from src.plot import plot_update
 from src.utils import *
 from infection import get_information_graph
 
+
 def updating_node_percolation(G: nx.Graph, node: int, tau: float):
     """
     Update the state of a node in the graph G
@@ -78,9 +79,11 @@ def critic_j_percolation(G: nx.Graph, tau: float, T: int) -> dict:
 
     I aim to determine the parameter J for which there is no long-term infection spread.
     [J < −(k/s) ln(r/τ)] is the condition for a node to become infected.
-    In the function, I extract r and check if it equals 1. J[i] is the minimum value of J that causes node i to become infected.
+    In the function, I extract r and check if it equals 1.
+    J[i] is the minimum value of J that causes node i to become infected.
     Skipping the calculations, I directly move to formula (15), which is the one I want to implement.
-    Ji (t + 1) = max min (Jj(t), (ki/si[Jj(t)]) * ln(rij(t)/τ)). si[J] is a function that sums [Jj(t) >= J] for all neighbors.
+    Ji (t + 1) = max min (Jj(t), (ki/si[Jj(t)]) * ln(rij(t)/τ)).
+    si[J] is a function that sums [Jj(t) >= J] for all neighbors.
 
     # :param J: Initial J values for each node
     :param G: NetworkX graph
@@ -96,16 +99,29 @@ def critic_j_percolation(G: nx.Graph, tau: float, T: int) -> dict:
             m = []
             k = G.degree(i)
             for j in G.neighbors(i):
-                s = sum(1 for k in G.neighbors(i) if
-                        j_copy[k] > j_copy[j])  # Calculate sum term
+                # Calculate sum term
+                s = sum(1 for k in G.neighbors(i) if j_copy[k] > j_copy[j])
                 r = np.random.uniform(0, 1)
-                m.append(min(j_copy[j], (k / s) * np.log(r / tau)))  # Calculate min max term
-            G[i][j_value] = max(m)  # Update J with the maximum value calculated
+                # Calculate min max term
+                m.append(min(j_copy[j], (k / s) * np.log(r / tau)))
+            # Update J with the maximum value calculated
+            G[i][j_value] = max(m)
     return {node: G.nodes[node][j_value] for node in G.nodes()}
 
                 
-def multiplex_percolation(J, tau:float, T: int, PG:nx.grap, VG:nx.graph, q: float ):
-    IG = get_information_graph(PG,VG,q)
+def multiplex_percolation(J, tau: float, T: int, PG: nx.Graph, VG: nx.Graph, q: float):
+    """
+    Multiplex percolation model
+
+    :param J:
+    :param tau:
+    :param T:
+    :param PG:
+    :param VG:
+    :param q:
+    :return:
+    """
+    IG = get_information_graph(PG, VG, q)
     cIG = IG.copy()
     
     for t in range(T):

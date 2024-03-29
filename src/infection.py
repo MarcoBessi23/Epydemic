@@ -190,11 +190,20 @@ def infection(G: nx.Graph,
     return get_infected(G)
 
 
-#Funzione per simulare l'evoluzione di un'infezione tramite approssimazione di campo medio
-def simulated_mean_field_infection(G:nx.graph, tau:float, c:float, T:int, J:float):
-        for _ in range(T):
-            k = G.number_of_nodes()
-            for s in range(k):
-                c = c + scipy.special.binom(s,k)(c**s)*((1-c)**(k-s))*infected_prob(s, k, tau, J) 
-             
-        return c
+def simulated_mean_field_infection(G: nx.graph, tau: float, c: float, T: int, J: float):
+    """
+    Simulated mean field infection
+    Funzione per simulare l'evoluzione di un'infezione tramite approssimazione di campo medio
+
+    :param G:
+    :param tau:
+    :param c:
+    :param T:
+    :param J:
+    :return:
+    """
+    for _ in range(T):
+        k = G.number_of_nodes()
+        for s in range(k):
+            c = c + scipy.special.binom(s, k)(c ** s) * ((1 - c) ** (k - s)) * infected_prob(s, k, tau, J)
+    return c
