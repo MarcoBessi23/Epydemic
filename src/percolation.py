@@ -1,10 +1,5 @@
 import networkx as nx
 import numpy as np
-import random as rd
-
-from matplotlib import pyplot as plt
-
-from src.plot import plot_update
 from src.utils import *
 from infection import get_information_graph
 
@@ -57,6 +52,7 @@ def simple_tau_percolation(G: nx.Graph, iterations: int) -> dict:
     :param iterations: Number of iterations
     :return: Updated tau values for each node
     """
+    # Initialize tau values for each node
     tau = {node: 0.0 for node in G.nodes()}
 
     for _ in range(iterations):
