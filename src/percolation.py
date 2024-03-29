@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 
 from src.plot import plot_update
 from src.utils import *
-
+from infection import get_information_graph
 
 def updating_node_percolation(G: nx.Graph, node: int, tau: float):
     """
@@ -104,7 +104,25 @@ def critic_j_percolation(G: nx.Graph, tau: float, T: int) -> dict:
     return {node: G.nodes[node][j_value] for node in G.nodes()}
 
                 
+def multiplex_percolation(J, tau:float, T: int, PG:nx.grap, VG:nx.graph, q: float ):
+    IG = get_information_graph(PG,VG,q)
+    cIG = IG.copy()
+    
+    for t in range(T):
+        cJ = J.copy()  # Create a copy of J to avoid overwriting values during iteration
 
+        for i in range(len(J)):
+            m = []
+            k = IG.degree(i)  # Calculate the degree of node i
+
+            for j in range(len(J)):  # Iterate over neighbors of node i
+                s = sum(1 for k in range(len(J)) if cJ[k] > cJ[j])  # Count neighbors with J greater than J[j]
+                r = np.random.uniform(0, 1)
+                m.append(min(cJ[j], (k / s) * np.log(r / tau)))  # Calculate min max term
+
+            J[i] = max(m)  # Update J[i] with the maximum value calculated
+
+    return J
                 
 
 

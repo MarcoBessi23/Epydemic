@@ -1,7 +1,7 @@
 import networkx as nx
 import numpy as np
 import random as rd
-
+import scipy
 from matplotlib import pyplot as plt
 
 from src.plot import plot_update
@@ -188,3 +188,13 @@ def infection(G: nx.Graph,
         print("\n")
 
     return get_infected(G)
+
+
+#Funzione per simulare l'evoluzione di un'infezione tramite approssimazione di campo medio
+def simulated_mean_field_infection(G:nx.graph, tau:float, c:float, T:int, J:float):
+        for _ in range(T):
+            k = G.number_of_nodes()
+            for s in range(k):
+                c = c + scipy.special.binom(s,k)(c**s)*((1-c)**(k-s))*infected_prob(s, k, tau, J) 
+             
+        return c
