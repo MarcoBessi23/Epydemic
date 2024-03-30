@@ -52,6 +52,7 @@ def critical_j_test_mf(G: nx.graph, c: float, T: int, ts: np.array, js: np.array
         for j in js:
             print(f"t: {t}, j: {j}")
             v = simulated_mean_field_infection(G.copy(), t, c, T, j)
+            print(v)
             if v == 0:  # if no one is infected @TODO add threshold
                 t_crit.append(t)
                 j_crit.append(j)

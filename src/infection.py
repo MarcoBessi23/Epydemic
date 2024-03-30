@@ -207,7 +207,7 @@ def simulated_mean_field_infection(G: nx.graph, tau: float, c: float, T: int, J:
         tot = 0
         for s in range(k):
             bin = scipy.special.binom(k, s)
-            value = bin * (c ** s) * ((1 - c) ** (k - s)) * infected_prob(s, k, tau, J)
+            value = bin * (c ** s) * ((1 - c) ** (k - s)) * s*infected_prob(s, k, tau, J)
             tot = tot + value
         c = tot
     return c

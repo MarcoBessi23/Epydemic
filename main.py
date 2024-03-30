@@ -8,9 +8,9 @@ from src.utils import *
 
 def main():
     # Values for the tests
-    js = np.arange(0, 20)  # Risk perception
+    js = np.arange(0, 100, 5)  # Risk perception
     ts = np.arange(0, 1, 0.1)  # Tau values
-    nodes = 10  # Number of nodes
+    nodes = 100  # Number of nodes
     immunity = healthy  # Immunity
     rec_prob = 0.1  # Recovery probability
     init_infect = 1  # Initial infected nodes
