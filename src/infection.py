@@ -195,15 +195,19 @@ def simulated_mean_field_infection(G: nx.graph, tau: float, c: float, T: int, J:
     Simulated mean field infection
     Funzione per simulare l'evoluzione di un'infezione tramite approssimazione di campo medio
 
-    :param G:
-    :param tau:
-    :param c:
-    :param T:
-    :param J:
-    :return:
+    :param G: Graph
+    :param tau: bare infection probability
+    :param c: percentuale valore iniziale di infetti
+    :param T: iterazioni
+    :param J: rischio percepito
+    :return: percentuale di infetti
     """
+    k = G.number_of_nodes()
     for _ in range(T):
-        k = G.number_of_nodes()
+        tot = 0
         for s in range(k):
-            c = c + scipy.special.binom(s, k)(c ** s) * ((1 - c) ** (k - s)) * infected_prob(s, k, tau, J)
+            bin = scipy.special.binom(k, s)
+            value = bin * (c ** s) * ((1 - c) ** (k - s)) * infected_prob(s, k, tau, J)
+            tot = tot + value
+        c = tot
     return c

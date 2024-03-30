@@ -1,6 +1,6 @@
 import numpy as np
 import networkx as nx
-from src.infection import infection
+from src.infection import infection, simulated_mean_field_infection
 from src.percolation import simple_percolation
 from src.utils import *
 
@@ -29,6 +29,30 @@ def critical_j_test(G: nx.graph,
             print(f"t: {t}, j: {j}")
             v = infection(G.copy(), j, t, rec_prob=rec_prob, immunity=immunity, plot=plot)
             if v == 0:
+                t_crit.append(t)
+                j_crit.append(j)
+                break
+    return {t_test: t_crit, j_test: j_crit}
+
+
+def critical_j_test_mf(G: nx.graph, c: float, T: int, ts: np.array, js: np.array) -> dict:
+    """
+    Get the critical J values test
+
+    :param G: graph
+    :param c: initial percentage of infected nodes
+    :param T: iteration
+    :param ts: values of tau
+    :param js: values of risk perception J
+    :return: return the critical J values
+    """
+    t_crit = []
+    j_crit = []
+    for t in ts:
+        for j in js:
+            print(f"t: {t}, j: {j}")
+            v = simulated_mean_field_infection(G.copy(), t, c, T, j)
+            if v == 0:  # if no one is infected @TODO add threshold
                 t_crit.append(t)
                 j_crit.append(j)
                 break
