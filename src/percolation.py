@@ -38,11 +38,11 @@ def simple_tau_percolation(G: nx.Graph, iterations: int) -> dict:
             # Update tau[i] using the minimum of max_values
             tau[i] = min(m)
             #return the critical tau(min of tau)
-    return min(tau)
+    return min(tau.values())
 
 
 # TODO Fare test per tipo di grafo, per tipo di j iniziale, per tipo di tau, media e distribuzione di j
-def critic_j_percolation(init_j: list, G: nx.Graph, tau: float, T: int) -> dict:
+def critic_j_percolation(init_j: list, G: nx.Graph, tau: float, T: int) -> float:
     """
     Calculate the critical J values for percolation.
 
@@ -70,12 +70,12 @@ def critic_j_percolation(init_j: list, G: nx.Graph, tau: float, T: int) -> dict:
             k = G.degree(i)
             for j in G.neighbors(i):
                 # Calculate sum term
-                s = sum(1 for k in G.neighbors(i) if js[k] > js[j])
+                s = sum(1 for k in G.neighbors(i) if js[k] >= js[j])
                 r = np.random.uniform(0, 1)
                 # Calculate min max term
                 m.append(min(js[j], (k / s) * np.log(r / tau)))
             # Update J with the maximum value calculated
-            G[i][j_value] = max(m)
+            G[i]['J'] = max(m)
         js = {node: G.nodes[node][j_value] for node in G.nodes()}
     return max(js.values())
 

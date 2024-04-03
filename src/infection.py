@@ -217,6 +217,34 @@ def simulated_approx_j_percolation(G: nx.Graph, tau: float, J: float, c: float, 
         G = cG.copy()
     return c
 
+def simulated_j_percolation2(G: nx.Graph, tau: float, J: float, c: float, T: int) -> float:
+    """
+    Simulated J percolation with approximation
+
+    :param G: graph just infected
+    :param tau: bare infection probability
+    :param J: risk perception
+    :param c: initial percentage of infected nodes
+    :param T: number of iterations
+    :return: return the updated graph
+    """
+    cG = G.copy()
+    for _ in range(T):
+        cc = 0
+        for node in G.nodes:
+            k = G.degree(node)
+            s = get_infected_neighbors(G, node)  # quenched version @TODO: implementation of the annealed version
+            r = np.random.uniform(0, 1)
+            if r < infected_prob(s, k, tau, J):
+                cG.nodes[node][state] = infected
+                cc += 1
+            else:
+                cG.nodes[node][state] = healthy
+        c = cc / G.number_of_nodes()
+        G = cG.copy()
+    return c
+
+
 
 def simulated_j_percolation(G: nx.Graph, tau: float, J: float, c: float, T: int) -> float:
     """
@@ -246,3 +274,22 @@ def simulated_j_percolation(G: nx.Graph, tau: float, J: float, c: float, T: int)
         G = cG.copy()
     return c
 
+
+#tau > np.random.uniform(0, 1) and G.nodes[n][state] == infected for n in G.neighbors(node)) else healthy
+def simulated_tau_percolation(G:nx.graph,T:int, tau:float):
+    cG = G.copy()
+    for _ in range(T):
+        for node in G.nodes:
+            r = np.random.uniform(0,1)
+            if tau > r  and (G.nodes[n][state] == infected for n in G.neighbors(node)):
+                cG.nodes[node][state] = infected
+            else:
+                cG.nodes[node][state] = healthy
+        c = get_infected(cG) / G.number_of_nodes()
+        G = cG.copy()
+    return c    
+
+            
+
+    
+    
