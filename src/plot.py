@@ -57,19 +57,22 @@ def plot_update(G: nx.Graph, pos: dict) -> None:
     plt.pause(1)
 
 
-def plot_critical_j(critics: dict) -> None:
+def plot_critical_j(critics: dict, file: str, prediction: bool = True) -> None:
     """
     Plot the critical J values
 
     :param critics: dict of critical values
+    :param file: file name
+    :param prediction: if the prediction should be plotted
     """
     plt.title("Critical J values")
     plt.plot(critics[t_test], critics[j_test], label="Critical J", color=blue, marker="o", linestyle="-")
+    if prediction:
+        plt.plot(critics[t_test], critics[j_pred], label="Predicted J", color=black, marker="", linestyle="--")
     plt.xlabel("Tau")
     plt.ylabel("Jc")
     plt.legend()
-    plt.savefig(path_plots + "critical_j.png")
+    plt.savefig(path_plots + file)
     plt.show()
-
 
     

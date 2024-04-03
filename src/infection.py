@@ -85,7 +85,7 @@ def infected_prob(s: int, k: int, t: float, J: float) -> float:
     :param k: degree of the node
     :param t: bare infection probability
     :param J: perception risk
-    :return: return the probability of being infected
+    :return: return the probability of being infected {t * exp(-J * s / k)} = u(s, k)
     """
     return t * np.exp(-J * s / k)
 
@@ -122,32 +122,12 @@ def change_state(G: nx.Graph, rec_prob: float, new_state: str) -> nx.Graph:
             next_graph.nodes[node][state] = new_state
     return next_graph
 
-
-def get_information_graph(PG: nx.Graph, VG: nx.Graph, q: float) -> nx.Graph:
-    """
-    Create the information graph from the two graphs Physical and Virtual graph
-
-    :param PG: Physical graph
-    :param VG: Virtual graph
-    :param q: q value
-    :return: return the information graph
-    """
-    IG = nx.Graph()
-    IG.add_nodes_from(PG.nodes())
-
-    for node in PG.nodes():
-        for neighbor in PG.neighbors(node):
-            r = np.random.uniform(0, 1)
-            if r < (1 - q):
-                IG.add_edge(node, neighbor)
-
-    for node in VG.nodes():
-        for neighbor in VG.neighbors(node):
-            r = np.random.uniform(0, 1)
-            if r < q:
-                IG.add_edge(node, neighbor)
-
-    return IG
+# @TODO: Move to another file?
+# _________________________________________________________________
+# _________________________________________________________________
+# _______________________SIMULATION________________________________
+# _________________________________________________________________
+# _________________________________________________________________
 
 
 def infection(G: nx.Graph,
@@ -190,24 +170,78 @@ def infection(G: nx.Graph,
     return get_infected(G)
 
 
-def simulated_mean_field_infection(G: nx.graph, tau: float, c: float, T: int, J: float):
+def simulated_mean_field_infection(k: int, tau: float, c: float, T: int, J: float):
     """
     Simulated mean field infection
-    Funzione per simulare l'evoluzione di un'infezione tramite approssimazione di campo medio
+    Function to simulate the evolution of an infection through mean field approximation
 
-    :param G: Graph
+    :param k: degree of the graph
     :param tau: bare infection probability
-    :param c: percentuale valore iniziale di infetti
-    :param T: iterazioni
-    :param J: rischio percepito
-    :return: percentuale di infetti
+    :param c: initial percentage of infected nodes
+    :param T: iteration
+    :param J: perception risk
+    :return: return of the percentage of infected nodes
     """
-    k = G.number_of_nodes()
     for _ in range(T):
-        tot = 0
-        for s in range(k):
-            bin = scipy.special.binom(k, s)
-            value = bin * (c ** s) * ((1 - c) ** (k - s)) * s*infected_prob(s, k, tau, J)
-            tot = tot + value
-        c = tot
+        cc = 0
+        for s in range(1, k+1):
+            cc += scipy.special.binom(k, s) * pow(c, s) * pow(1 - c, k - s) * s * infected_prob(s, k, tau, J)
+        c = cc
+    return c
+
+
+def simulated_approx_j_percolation(G: nx.Graph, tau: float, J: float, c: float, T: int) -> float:
+    """
+    Simulated J percolation with approximation
+
+    :param G: graph just infected
+    :param tau: bare infection probability
+    :param J: risk perception
+    :param c: initial percentage of infected nodes
+    :param T: number of iterations
+    :return: return the updated graph
+    """
+    cG = G.copy()
+    for _ in range(T):
+        cc = 0
+        for node in G.nodes:
+            k = G.degree(node)
+            s = get_infected_neighbors(G, node)  # quenched version @TODO: implementation of the annealed version
+            r = np.random.uniform(0, 1)
+            if r < s * infected_prob(s, k, tau, J):
+                cG.nodes[node][state] = infected
+                cc += 1
+            else:
+                cG.nodes[node][state] = healthy
+        c = cc / G.number_of_nodes()
+        G = cG.copy()
+    return c
+
+
+def simulated_j_percolation(G: nx.Graph, tau: float, J: float, c: float, T: int) -> float:
+    """
+    Simulated J percolation
+
+    :param G: graph just infected
+    :param tau: bare infection probability
+    :param J: risk perception
+    :param c: initial percentage of infected nodes
+    :param T: number of iterations
+    :return: return the updated graph
+    """
+    cG = G.copy()
+    for _ in range(T):
+        cc = 0
+        for node in G.nodes:
+            k = G.degree(node)
+            s = get_infected_neighbors(G, node)  # quenched version @TODO: implementation of the annealed version
+            r = np.random.uniform(0, 1)
+            # p(s,k) = (1-(pow(1-u(s,k), s)))
+            if r < (1-pow(1-infected_prob(s, k, tau, J), s)):
+                cG.nodes[node][state] = infected
+                cc += 1
+            else:
+                cG.nodes[node][state] = healthy
+        c = cc / G.number_of_nodes()
+        G = cG.copy()
     return c
