@@ -245,3 +245,4 @@ def simulated_j_percolation(G: nx.Graph, tau: float, J: float, c: float, T: int)
         c = cc / G.number_of_nodes()
         G = cG.copy()
     return c
+

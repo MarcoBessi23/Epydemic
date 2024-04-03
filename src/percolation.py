@@ -37,7 +37,8 @@ def simple_tau_percolation(G: nx.Graph, iterations: int) -> dict:
                 m.append(max(r, ct[j]))
             # Update tau[i] using the minimum of max_values
             tau[i] = min(m)
-    return tau
+            #return the critical tau(min of tau)
+    return min(tau)
 
 
 # TODO Fare test per tipo di grafo, per tipo di j iniziale, per tipo di tau, media e distribuzione di j
@@ -46,7 +47,7 @@ def critic_j_percolation(init_j: list, G: nx.Graph, tau: float, T: int) -> dict:
     Calculate the critical J values for percolation.
 
     I aim to determine the parameter J for which there is no long-term infection spread.
-    [J < −(k/s) ln(r/τ)] is the condition for a node to become infected.
+    [J < -(k/s) ln(r/τ)] is the condition for a node to become infected.
     In the function, I extract r and check if it equals 1.
     J[i] is the minimum value of J that causes node i to become infected.
     Skipping the calculations, I directly move to formula (15), which is the one I want to implement.
@@ -76,7 +77,7 @@ def critic_j_percolation(init_j: list, G: nx.Graph, tau: float, T: int) -> dict:
             # Update J with the maximum value calculated
             G[i][j_value] = max(m)
         js = {node: G.nodes[node][j_value] for node in G.nodes()}
-    return js
+    return max(js.values())
 
 
 # TODO Fare test per tipo di grafo, per tipo di j iniziale, per tipo di tau, e per q, media e distribuzione di j
@@ -113,4 +114,4 @@ def multiplex_percolation(init_j: list, tau: float, T: int, PG: nx.Graph, VG: nx
             IG[i][j_value] = max(m)  # Update J[i] with the maximum value calculated
 
         js = {node: IG.nodes[node][j_value] for node in IG.nodes()}
-    return js
+    return max(js.values())
