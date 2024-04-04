@@ -6,7 +6,7 @@ from src.utils import *
 
 
 # TODO Fare test per tipo di grafo, media dei tau, plottare distribuzione dei tau
-def simple_tau_percolation(G: nx.Graph, iterations: int) -> dict:
+def simple_tau_percolation(G: nx.Graph, iterations: int) -> float:
     """
     Update the values of tau parameters associated with the nodes in graph G based on simple percolation.
 
@@ -30,19 +30,19 @@ def simple_tau_percolation(G: nx.Graph, iterations: int) -> dict:
         ct = tau.copy()
         # Iterate over each node in the graph
         for i in G.nodes():
-            m = []
+            m = [1]
             # Iterate over neighbors of the node
             for j in G.neighbors(i):
                 r = np.random.uniform(0, 1)
                 m.append(max(r, ct[j]))
             # Update tau[i] using the minimum of max_values
             tau[i] = min(m)
-            #return the critical tau(min of tau)
+            # return the critical tau(min of tau)
     return min(tau.values())
 
 
 # TODO Fare test per tipo di grafo, per tipo di j iniziale, per tipo di tau, media e distribuzione di j
-def critic_j_percolation(init_j: list, G: nx.Graph, tau: float, T: int) -> float:
+def critic_j_percolation(G: nx.Graph, init_j: float, tau: float, T: int) -> float:
     """
     Calculate the critical J values for percolation.
 
@@ -51,37 +51,38 @@ def critic_j_percolation(init_j: list, G: nx.Graph, tau: float, T: int) -> float
     In the function, I extract r and check if it equals 1.
     J[i] is the minimum value of J that causes node i to become infected.
     Skipping the calculations, I directly move to formula (15), which is the one I want to implement.
-    Ji (t + 1) = max min (Jj(t), (ki/si[Jj(t)]) * ln(rij(t)/τ)).
+    Ji (t + 1) = max min (Jj(t), (-ki/si[Jj(t)]) * ln(rij(t)/τ)).
     si[J] is a function that sums [Jj(t) >= J] for all neighbors.
 
-    :param init_j: Initial J values
     :param G: NetworkX graph
+    :param init_j: Initial J values
     :param tau: Infection probability
     :param T: Number of iterations
     :return: Updated critical J values
     """
 
     # Initialize J values for each node
-    js = {node: init_j[i] for i, node in enumerate(G.nodes())}
+    js = {node: init_j for i, node in enumerate(G.nodes())}
 
     for _ in range(T):
         for i in G.nodes():
-            m = []
+            m = [-200000000]
             k = G.degree(i)
             for j in G.neighbors(i):
                 # Calculate sum term
-                s = sum(1 for k in G.neighbors(i) if js[k] >= js[j])
+                s = sum(1 for n in G.neighbors(i) if js[n] >= js[j])
                 r = np.random.uniform(0, 1)
                 # Calculate min max term
-                m.append(min(js[j], (k / s) * np.log(r / tau)))
+                value = (-(k / s) * np.log(r / tau))
+                m.append(min(js[j], value))
             # Update J with the maximum value calculated
-            G[i]['J'] = max(m)
+            G.nodes[i][j_value] = max(m)
         js = {node: G.nodes[node][j_value] for node in G.nodes()}
     return max(js.values())
 
 
 # TODO Fare test per tipo di grafo, per tipo di j iniziale, per tipo di tau, e per q, media e distribuzione di j
-def multiplex_percolation(init_j: list, tau: float, T: int, PG: nx.Graph, VG: nx.Graph, q: float):
+def multiplex_percolation(init_j: list, tau: float, T: int, PG: nx.Graph, VG: nx.Graph, q: float) -> float:
     """
     Multiplex percolation model
 

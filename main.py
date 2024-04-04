@@ -15,8 +15,8 @@ def main():
     # mean_field_critical_j_test(PG, init_infect, iterations, ts, js)
     # not_approx_critical_j_test(PG, init_infect, iterations, ts, js)
     # approx_critical_j_test(PG, init_infect, iterations, ts, js)
-    # critical_j_test_percolation(PG, init_infect, iterations, ts, js) da rivedere, problemi quando nodi non hanno vicini
-    simple_perc_test(PG,iterations,ts)
+    critical_j_test_percolation(PG, init_infect, iterations, ts, js)  # da rivedere, problemi quando nodi non hanno vicini
+    # simple_perc_test(PG, iterations, ts)
 
 
 if __name__ == "__main__":

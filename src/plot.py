@@ -75,4 +75,22 @@ def plot_critical_j(critics: dict, file: str, prediction: bool = True) -> None:
     plt.savefig(path_plots + file)
     plt.show()
 
+
+def plot_critical_t(critics: dict, file: str, prediction: bool = True) -> None:
+    """
+    Plot the critical tau values
+
+    :param critics: dict of critical values
+    :param file: file name
+    :param prediction: if the prediction should be plotted
+    """
+    plt.title("Critical Tau values")
+    plt.plot(critics[t_test], critics[t_test], label="Critical Tau", color=blue, marker="o", linestyle="-")
+    if prediction:
+        plt.plot(critics[t_test], critics[t_pred], label="Predicted Tau", color=black, marker="", linestyle="--")
+    plt.xlabel("Tc")
+    plt.ylabel("Tc")
+    plt.legend()
+    plt.savefig(path_plots + file)
+    plt.show()
     

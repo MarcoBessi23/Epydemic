@@ -3,8 +3,8 @@ import networkx as nx
 
 from src.config import zero_threshold
 from src.infection import infection, simulated_mean_field_infection, simulated_j_percolation, \
-    simulated_approx_j_percolation, simulated_j_percolation2, simulated_tau_percolation
-from src.plot import plot_critical_j
+    simulated_approx_j_percolation, simulated_j_percolation2, simulated_tau_percolation, get_percentage_graph_degree
+from src.plot import plot_critical_j, plot_critical_t
 from src.percolation import critic_j_percolation, simple_tau_percolation
 from src.utils import *
 
@@ -52,7 +52,7 @@ def mean_field_critical_j_test(G: nx.Graph, c: float, T: int, ts: np.array, js: 
     """
 
     # Calculate the average degree of the graph
-    k = int(sum(d for n, d in G.degree()) / G.number_of_nodes())
+    k = get_percentage_graph_degree(G)
 
     results = {t_test: [], j_test: [], j_pred: []}
     for t in reversed(ts):
@@ -70,27 +70,28 @@ def mean_field_critical_j_test(G: nx.Graph, c: float, T: int, ts: np.array, js: 
     plot_critical_j(results, file=mean_field_jc_plot)
 
 
-def simple_perc_test(G:nx.Graph, T:int, ts:np.array):
+def simple_perc_test(G: nx.Graph, T: int, ts: np.array):
     """
     Get the value of tau_critical
     :param G: graph
-    :param c: initial percentage of infected nodes
     :param T: iteration
     :param ts: values of tau
     :return: return the critical tau values
     """
-    results = {t_test: []}
-    t_pred = simple_tau_percolation(G.copy(), iterations= 100)
-    print(f"Critical tau prediction: {t_pred}")
+    results = {t_test: [], t_pred: []}
+    tc_pred = simple_tau_percolation(G.copy(), iterations=T)
+    print(f"Critical tau prediction: {tc_pred}")
     for t in reversed(ts):
         print(f"t: {round(t,2)}")
-        v = simulated_tau_percolation(G.copy(), T, tau= t)
+        v = simulated_tau_percolation(G.copy(), T, tau=t)
         print(f"Valore di c: {v}")
         if v <= zero_threshold:
             results[t_test].append(t)
+            results[t_pred].append(tc_pred)
             break
     print("--------------------------------------------------", end="\n\n")
-    print(f"critical tau: {results}")
+    plot_critical_t(results, file=critical_t_plot)
+
 
 def not_approx_critical_j_test(G: nx.Graph, c: float, T: int, ts: np.array, js: np.array):
     """
@@ -105,7 +106,7 @@ def not_approx_critical_j_test(G: nx.Graph, c: float, T: int, ts: np.array, js: 
     """
 
     # Calculate the average degree of the graph
-    k = int(sum(d for n, d in G.degree()) / G.number_of_nodes())
+    k = get_percentage_graph_degree(G)
 
     results = {t_test: [], j_test: [], j_pred: []}
     for t in reversed(ts):
@@ -166,13 +167,10 @@ def critical_j_test_percolation(G: nx.Graph, c: float, T: int, ts: np.array, js:
     :return: return the critical J values
     """
 
-    # Calculate the average degree of the graph
-    k = int(sum(d for n, d in G.degree()) / G.number_of_nodes())
-    init_j = [0.5]*G.number_of_nodes()
-
+    init_j = 0
     results = {t_test: [], j_test: [], j_pred: []}
     for t in reversed(ts):
-        jc_pred = critic_j_percolation(init_j,G,t,100)
+        jc_pred = critic_j_percolation(G, init_j, t, T)
         print(f"Critical J prediction: {jc_pred}")
         for j in js:
             print(f"t: {round(t,2)}, j: {round(j,2)}")

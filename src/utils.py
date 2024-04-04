@@ -9,6 +9,7 @@ j_value = "J"
 # Constants for the tests
 t_test = "t_risk"
 j_test = "j_risk"
+t_pred = "t_pred"
 j_pred = "j_pred"
 
 # Path plotting
@@ -19,6 +20,7 @@ mean_field_jc_plot = "mf_critical_j.png"
 not_approx_jc_plot = "not_approx_critical_j.png"
 approx_plot_jc_plot = "approx_critical_j.png"
 critical_j_plot = "critical_j.png"
+critical_t_plot = "critical_t.png"
 
 # Colors for the graph
 blue = "cornflowerblue"
