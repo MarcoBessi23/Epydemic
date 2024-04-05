@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 
 from src.plot import plot_update
 from src.utils import *
-
+from src.graphs import get_information_graph
 
 def critical_j(k: int, t: float) -> float:
     """
@@ -256,3 +256,29 @@ def simulated_tau_percolation(G: nx.graph, T: int, tau: float) -> float:
             else:
                 G.nodes[node][state] = healthy
     return get_infected(G) / G.number_of_nodes()
+
+
+def simulated_multiplex(PG: nx.Graph,VG: nx.Graph,q: float, tau: float, J: float, T: int):
+    """
+    Simulated J percolation
+
+    :param G: graph just infected
+    :param tau: bare infection probability
+    :param J: risk perception
+    :param T: number of iterations
+    :return: return the updated graph
+    """
+    IG = get_information_graph(PG,VG,q)
+    for _ in range(T):
+        cIG = IG.copy
+        for node in PG.nodes:
+            k = PG.degree(node)
+            s = get_infected_neighbors(cIG, node)  # quenched version @TODO: implementation of the annealed version
+            r = np.random.uniform(0, 1)
+            # p(s,k) = (1-(pow(1-u(s,k), s)))
+            if r < (1-pow(1-infected_prob(s, k, tau, J), s)):
+                PG.nodes[node][state] = infected
+                IG.nodes[node][state] = infected
+            else:
+                PG.nodes[node][state],IG.nodes[node][state] = healthy
+    return get_infected(PG) / PG.number_of_nodes()

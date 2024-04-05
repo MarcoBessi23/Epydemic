@@ -1,7 +1,7 @@
 from src.graphs import *
 from src.tests import *
 from src.config import *
-
+from src.plot import plot_all_graphs
 
 def main():
     # GRAPHS FOR TESTS
