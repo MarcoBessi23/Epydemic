@@ -106,7 +106,7 @@ def plot_q_value(critics: dict, file: str) -> None:
     :return:
     """
     fig, ax = plt.subplots()
-    ax.set(xlabel='Tau', ylabel='Q', title='Phase Diagram')
+    ax.set(xlabel='Tau', ylabel='q', title='Phase Diagram')
 
     x = np.array(critics[t_test])
     y = np.array(critics[q_test])

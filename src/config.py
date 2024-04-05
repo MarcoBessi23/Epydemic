@@ -1,13 +1,12 @@
 import numpy as np
 
-from src.utils import healthy
-
+from src.utils import *
 # Values for the tests
 js = np.arange(0.1, 200.1, 0.1)  # Risk perception
 ts = np.arange(0.1, 1.1, 0.1)  # Tau values
 qs = np.arange(0.1, 1.1, 0.1)  # Connection probability for Information Graph
 
-iterations = 1000  # Iteration
+iterations = 100  # Iteration
 zero_threshold = 1e-6  # Zero threshold
 
 # Values for the graph

@@ -81,7 +81,7 @@ def critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
 
 
 # TODO Fare test per tipo di grafo, per tipo di j iniziale, per tipo di tau, e per q, media e distribuzione di j
-def multiplex_percolation(IG: nx.Graph, tau: float, T: int) -> float:
+def multiplex_percolation(PG: nx.graph, VG: nx.graph, tau: float, T: int, q: float) -> float:
     """
     Multiplex percolation model
 
@@ -90,21 +90,25 @@ def multiplex_percolation(IG: nx.Graph, tau: float, T: int) -> float:
     :param T:
     :return:
     """
-
+    IG = get_information_graph(PG,VG,q)
     # Initialize J values for each node
-    for node in IG.nodes():
-        IG.nodes[node][j_value] = np.random.uniform(0, 1)
+    for node in PG.nodes():
+        PG.nodes[node][j_value] = np.random.uniform(1, 10)
 
     for _ in range(T):
-        cIG = IG.copy()
-        for i in IG.nodes():
-            m = []
-            k = IG.degree(i)  # Calculate the degree of node i
-            for j in IG.neighbors(i):  # Iterate over neighbors of node i
+        cPG = PG.copy()
+        for i in PG.nodes():
+            m = [0]
+            k = PG.degree(i)  # Calculate the degree of node i
+            for j in PG.neighbors(i):  # Iterate over neighbors of node i in PG
                 # Count neighbors with J greater than J[j]
-                s = sum(1 for n in IG.neighbors(i) if cIG.nodes[n][j_value] >= cIG.nodes[j][j_value])
+                si = sum(1 for n in IG.neighbors(i) if cPG.nodes[n][j_value] >= cPG.nodes[j][j_value])
+                if si==0:
+                    s=1 #setting s to 1 to avoid division by 0
+                else:
+                    s=si
                 # Calculate min max term
                 r = np.random.uniform(0, 1)
-                m.append(min(cIG.nodes[j][j_value], (-(k / s) * np.log(r / tau))))
-            IG[i][j_value] = max(m)  # Update J[i] with the maximum value calculated
-    return max(IG.nodes[node][j_value] for node in IG.nodes())
+                m.append(min(cPG.nodes[j][j_value], (-(k / s) * np.log(r / tau))))
+            PG.nodes[i][j_value] = max(m)  # Update J[i] with the maximum value calculated
+    return max(PG.nodes[node][j_value] for node in PG.nodes())
