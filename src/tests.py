@@ -136,7 +136,7 @@ def multiplex_percolation_critical_j_test_test(PG: nx.Graph, VG: nx.Graph, T: in
     :param qs: values of q
     :return: return the critical J values
     """
-    results = {q_test: [], t_test: [], j_test: [], j_pred: []}
+    results = {q_test: [], t_test: [], j_pred: []}
     for q in qs:
         IG = get_information_graph(PG, VG, q)
         for t in reversed(ts):
@@ -145,5 +145,6 @@ def multiplex_percolation_critical_j_test_test(PG: nx.Graph, VG: nx.Graph, T: in
             results[q_test].append(q)
             results[t_test].append(t)
             results[j_pred].append(jc_pred if jc_pred > 0 else 0)
+            print(f"q: {round(q, 2)}, t: {round(t, 2)}, jc: {round(jc_pred, 2)}")
         print("--------------------------------------------------", end="\n\n")
     plot_q_value(results, file=q_plot)

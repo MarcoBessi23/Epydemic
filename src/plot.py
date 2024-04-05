@@ -1,8 +1,9 @@
 import networkx as nx
+import numpy as np
+import scipy
+from scipy import interpolate
 from matplotlib import pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
-from src.config import ts, qs
 from src.utils import *
 
 
@@ -97,27 +98,33 @@ def plot_critical_t(critics: dict, file: str, prediction: bool = True) -> None:
     plt.show()
 
 
-def plot_q_value(critics: dict, file: str, prediction: bool = True) -> None:
+def plot_q_value(critics: dict, file: str) -> None:
     """
     Plot the value of the Information Graph
     :param critics:
     :param file:
-    :param prediction:
     :return:
     """
-    plt.title("Phase diagram")
-    fig = plt.figure()
+    fig, ax = plt.subplots()
+    ax.set(xlabel='Tau', ylabel='Q', title='Phase Diagram')
 
-    # Aggiunta di un asse 3D
-    ax = fig.add_subplot(111, projection='3d')
+    x = np.array(critics[t_test])
+    y = np.array(critics[q_test])
+    z = np.array(critics[j_pred])
 
-    # Creazione del grafico 3D
-    ax.scatter(critics[t_test], critics[q_test], critics[j_pred], c='r', marker='o')
+    xi, yi = np.mgrid[x.min():x.max():500j, y.min():y.max():500j]
 
-    # Impostazione dei titoli degli assi
-    ax.set_xlabel('Tau')
-    ax.set_ylabel('Q')
-    ax.set_zlabel('Jc')
+    rbf = scipy.interpolate.Rbf(x, y, z)
+    ai = rbf(xi, yi)
 
+    img = ax.imshow(ai.T, origin='lower', extent=[x.min(), x.max(), y.min(), y.max()])
+
+    # Add points values
+    # ax.scatter(x, y, c=z)
+
+    bar = fig.colorbar(img)
+    bar.set_label("Jc")
+
+    plt.savefig(path_plots + file)
     plt.show()
-    
+
