@@ -6,17 +6,17 @@ from src.config import *
 def main():
     # GRAPHS FOR TESTS
     # PG, VG, IG = cycle_graph_test()
-    PG, VG, IG = random_graph_test(n_nodes, p=0.3, infected=init_infect)  # TODO: Check components graphs divided by zero
+    # TODO: Check components graphs divided by zero
+    PG, VG, IG = random_graph_test(n_nodes, p=0.6, infected=init_infect)
     # PG, VG, IG = scale_free_graph_test(nodes, m, 0.5, init_infect)
-    # plot_all_graphs(PG, 0.2, 0.1)
+    # plot_all_graphs(PG, VG, IG)
 
     # TESTS
     # critical_j_test(PG, ts, js, rec_prob=rec_prob, immunity=immunity, plot=False)
     # mean_field_critical_j_test(PG, init_infect, iterations, ts, js)
-    # not_approx_critical_j_test(PG, init_infect, iterations, ts, js)
-    # approx_critical_j_test(PG, init_infect, iterations, ts, js)
-    critical_j_test_percolation(PG, init_infect, iterations, ts, js)  # da rivedere, problemi quando nodi non hanno vicini
+    # percolation_critical_j_test(PG, iterations, ts, js)
     # simple_perc_test(PG, iterations, ts)
+    multiplex_percolation_critical_j_test_test(PG, VG, iterations, ts, qs)
 
 
 if __name__ == "__main__":

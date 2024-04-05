@@ -1,6 +1,8 @@
 import networkx as nx
 from matplotlib import pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
+from src.config import ts, qs
 from src.utils import *
 
 
@@ -92,5 +94,30 @@ def plot_critical_t(critics: dict, file: str, prediction: bool = True) -> None:
     plt.ylabel("Tc")
     plt.legend()
     plt.savefig(path_plots + file)
+    plt.show()
+
+
+def plot_q_value(critics: dict, file: str, prediction: bool = True) -> None:
+    """
+    Plot the value of the Information Graph
+    :param critics:
+    :param file:
+    :param prediction:
+    :return:
+    """
+    plt.title("Phase diagram")
+    fig = plt.figure()
+
+    # Aggiunta di un asse 3D
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Creazione del grafico 3D
+    ax.scatter(critics[t_test], critics[q_test], critics[j_pred], c='r', marker='o')
+
+    # Impostazione dei titoli degli assi
+    ax.set_xlabel('Tau')
+    ax.set_ylabel('Q')
+    ax.set_zlabel('Jc')
+
     plt.show()
     

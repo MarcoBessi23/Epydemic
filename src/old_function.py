@@ -1,50 +1,69 @@
 import networkx as nx
 import numpy as np
 
-from src.utils import infected, state, healthy
+from src.config import zero_threshold
+from src.infection import get_average_graph_degree, simulated_j_percolation, simulated_approx_j_percolation
+from src.plot import plot_critical_j
+from src.utils import infected, state, healthy, t_test, j_test, j_pred, not_approx_jc_plot, approx_plot_jc_plot
 
 
-def updating_node_percolation(G: nx.Graph, node: int, tau: float):
+def not_approx_critical_j_test(G: nx.Graph, T: int, ts: np.array, js: np.array):
     """
-    Update the state of a node in the graph G
-    @TODO funzione per aggiornare lo stato del nodo la uso ad ogni passaggio, deve restituire lo stato
+    Get the critical J values test
 
     :param G: graph
-    :param node:
-    :param tau: bare infection probability
-    :return: updated node state
+    :param T: iteration
+    :param ts: values of tau
+    :param js: values of risk perception J
+    :return: return the critical J values
     """
-    return infected if any(
-        tau > np.random.uniform(0, 1) and G.nodes[n][state] == infected for n in G.neighbors(node)) else healthy
+
+    # Calculate the average degree of the graph
+    k = get_average_graph_degree(G)
+
+    results = {t_test: [], j_test: [], j_pred: []}
+    for t in reversed(ts):
+        # Calculate the critical J prediction from the mean field approximation
+        jc_pred = k * np.log(k * t)
+        print(f"Critical J prediction: {jc_pred}")
+        for j in js:
+            print(f"t: {round(t,2)}, j: {round(j,2)}")
+            v = simulated_j_percolation(G.copy(), t, j, T)
+            if v <= zero_threshold:
+                results[t_test].append(t)
+                results[j_test].append(j)
+                results[j_pred].append(jc_pred if jc_pred > 0 else 0)
+                break
+        print("--------------------------------------------------", end="\n\n")
+    plot_critical_j(results, file=not_approx_jc_plot)
 
 
-def simple_percolation(G: nx.graph, tau: float, iterations: int):
+def approx_critical_j_test(G: nx.Graph, T: int, ts: np.array, js: np.array):
     """
-    Simple percolation model
-    @TODO Ho bisogno di copiare il grafo ad ogni passaggio e applicare la funzione di sopra ai nodi del grafi G, non finita
+    Get the critical J values test
 
     :param G: graph
-    :param tau: bare infection probability
-    :param iterations: number of iterations
-    :return: return the updated graph
+    :param T: iteration
+    :param ts: values of tau
+    :param js: values of risk perception J
+    :return: return the critical J values
     """
-    for _ in range(iterations):
-        Gc = G.copy()
-        for node in G.nodes:
-            G.nodes[node][state] = updating_node_percolation(Gc, node, tau)
-    return G
 
+    # Calculate the average degree of the graph
+    k = get_average_graph_degree(G)
 
-def percolation_test(G: nx.Graph, tau: float, iterations: int = 50):
-    """
-    Test the percolation
-    @TODO da finire
+    results = {t_test: [], j_test: [], j_pred: []}
+    for t in reversed(ts):
+        jc_pred = k * np.log(k * t)
+        print(f"Critical J prediction: {jc_pred}")
+        for j in js:
+            print(f"t: {round(t,2)}, j: {round(j,2)}")
+            v = simulated_approx_j_percolation(G.copy(), t, j, T)
+            if v <= zero_threshold:
+                results[t_test].append(t)
+                results[j_test].append(j)
+                results[j_pred].append(jc_pred if jc_pred > 0 else 0)
+                break
+        print("--------------------------------------------------", end="\n\n")
+    plot_critical_j(results, file=approx_plot_jc_plot)
 
-    :param G: graph
-    :param tau: bare infection probability
-    :param iterations: number of iterations
-    :return: return the graph after the percolation
-    """
-    for _ in range(iterations):
-        G = simple_percolation(G, tau, iterations)
-    return G

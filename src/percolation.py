@@ -42,7 +42,7 @@ def simple_tau_percolation(G: nx.Graph, iterations: int) -> float:
 
 
 # TODO Fare test per tipo di grafo, per tipo di j iniziale, per tipo di tau, media e distribuzione di j
-def critic_j_percolation(G: nx.Graph, init_j: float, tau: float, T: int) -> float:
+def critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
     """
     Calculate the critical J values for percolation.
 
@@ -55,64 +55,56 @@ def critic_j_percolation(G: nx.Graph, init_j: float, tau: float, T: int) -> floa
     si[J] is a function that sums [Jj(t) >= J] for all neighbors.
 
     :param G: NetworkX graph
-    :param init_j: Initial J values
     :param tau: Infection probability
     :param T: Number of iterations
     :return: Updated critical J values
     """
 
     # Initialize J values for each node
-    js = {node: init_j for i, node in enumerate(G.nodes())}
+    for node in G.nodes():
+        G.nodes[node][j_value] = np.random.uniform(0, 1)
 
     for _ in range(T):
+        cG = G.copy()
         for i in G.nodes():
-            m = [-200000000]
+            m = [0]
             k = G.degree(i)
             for j in G.neighbors(i):
                 # Calculate sum term
-                s = sum(1 for n in G.neighbors(i) if js[n] >= js[j])
+                s = sum(1 for n in G.neighbors(i) if cG.nodes[n][j_value] >= cG.nodes[j][j_value])
                 r = np.random.uniform(0, 1)
                 # Calculate min max term
-                value = (-(k / s) * np.log(r / tau))
-                m.append(min(js[j], value))
+                m.append(min(cG.nodes[j][j_value], (-(k / s) * np.log(r / tau))))
             # Update J with the maximum value calculated
             G.nodes[i][j_value] = max(m)
-        js = {node: G.nodes[node][j_value] for node in G.nodes()}
-    return max(js.values())
+    return max(G.nodes[node][j_value] for node in G.nodes())
 
 
 # TODO Fare test per tipo di grafo, per tipo di j iniziale, per tipo di tau, e per q, media e distribuzione di j
-def multiplex_percolation(init_j: list, tau: float, T: int, PG: nx.Graph, VG: nx.Graph, q: float) -> float:
+def multiplex_percolation(IG: nx.Graph, tau: float, T: int) -> float:
     """
     Multiplex percolation model
 
-    :param init_j:
+    :param IG:
     :param tau:
     :param T:
-    :param PG:
-    :param VG:
-    :param q:
     :return:
     """
-    IG = get_information_graph(PG, VG, q)
 
     # Initialize J values for each node
-    js = {node: init_j[i] for i, node in enumerate(IG.nodes())}
+    for node in IG.nodes():
+        IG.nodes[node][j_value] = np.random.uniform(0, 1)
 
     for _ in range(T):
-
+        cIG = IG.copy()
         for i in IG.nodes():
             m = []
             k = IG.degree(i)  # Calculate the degree of node i
-
             for j in IG.neighbors(i):  # Iterate over neighbors of node i
                 # Count neighbors with J greater than J[j]
-                s = sum(1 for k in IG.neighbors(i) if js[k] > js[j])
-
+                s = sum(1 for n in IG.neighbors(i) if cIG.nodes[n][j_value] >= cIG.nodes[j][j_value])
                 # Calculate min max term
                 r = np.random.uniform(0, 1)
-                m.append(min(js[j], (k / s) * np.log(r / tau)))
+                m.append(min(cIG.nodes[j][j_value], (-(k / s) * np.log(r / tau))))
             IG[i][j_value] = max(m)  # Update J[i] with the maximum value calculated
-
-        js = {node: IG.nodes[node][j_value] for node in IG.nodes()}
-    return max(js.values())
+    return max(IG.nodes[node][j_value] for node in IG.nodes())
