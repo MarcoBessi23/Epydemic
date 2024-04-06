@@ -5,7 +5,7 @@ from src.config import zero_threshold
 from src.graphs import get_information_graph
 from src.infection import get_average_graph_degree, simulated_mean_field_infection, \
     simulated_tau_percolation, simulated_j_percolation
-from src.plot import plot_critical_j, plot_critical_t, plot_q_value
+from src.plot import plot_critical_j, plot_critical_t, plot_q_value, plot_all_graphs
 from src.percolation import critic_j_percolation, simple_tau_percolation, multiplex_percolation
 from src.utils import *
 
@@ -137,9 +137,11 @@ def multiplex_percolation_critical_j_test_test(PG: nx.Graph, VG: nx.Graph, T: in
     """
     results = {q_test: [], t_test: [], j_pred: []}
     for q in qs:
+        IG = get_information_graph(PG, VG, q)
+        plot_all_graphs(PG, VG, IG)
         for t in reversed(ts):
             # Calculate the jc prediction about percolation
-            jc_pred = multiplex_percolation(PG, VG, t, T, q)
+            jc_pred = multiplex_percolation(IG.copy(), PG.copy(), t, T, q)
             results[q_test].append(q)
             results[t_test].append(t)
             results[j_pred].append(jc_pred if jc_pred > 0 else 0)

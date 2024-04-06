@@ -38,19 +38,20 @@ def scale_free_graph_test(nodes: int = 5, m: int = 3, q: float = 0.5, infected: 
     return PG, VG, IG
 
 
-def random_graph_test(nodes: int = 10, p: float = 0.4, q: float = 0.5, infected: int = 2):
+def random_graph_test(nodes: int = 10, pPG: float = 0.4, pVG: float = 0.6, q: float = 0.5, infected: int = 2):
     """
     Test the random graph
 
     :param nodes:
-    :param p:
+    :param pPG:
+    :param pVG:
     :param q:
     :param infected:
     :return:
     """
-    PG = nx.gnp_random_graph(nodes, p)
+    PG = nx.gnp_random_graph(nodes, pPG)
     init_infected(PG, infected)
-    VG = nx.gnp_random_graph(nodes, p)
+    VG = nx.gnp_random_graph(nodes, pVG)
     IG = get_information_graph(PG, VG, q)
     return PG, VG, IG
 

@@ -10,7 +10,7 @@ iterations = 100  # Iteration
 zero_threshold = 1e-6  # Zero threshold
 
 # Values for the graph
-n_nodes = 50  # Number of nodes
+n_nodes = 40  # Number of nodes
 m = 4  # Number of edges to attach from a new node
 init_infect = 1  # Initial infected nodes
 percentage_init_infect = 0.5  # Initial percentage of infected nodes

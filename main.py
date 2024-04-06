@@ -1,13 +1,14 @@
 from src.graphs import *
+from src.plot import plot_all_graphs
 from src.tests import *
 from src.config import *
-from src.plot import plot_all_graphs
+
 
 def main():
     # GRAPHS FOR TESTS
     # PG, VG, IG = cycle_graph_test()
     # TODO: Check components graphs divided by zero
-    PG, VG, IG = random_graph_test(n_nodes, p=0.6, infected=init_infect)
+    PG, VG, IG = random_graph_test(n_nodes, pPG=0.5, pVG=0.2, infected=init_infect)
     # PG, VG, IG = scale_free_graph_test(nodes, m, 0.5, init_infect)
     # plot_all_graphs(PG, VG, IG)
 

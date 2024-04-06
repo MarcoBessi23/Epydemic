@@ -34,7 +34,7 @@ def plot_all_graphs(PG: nx.Graph, VG: nx.Graph, IG: nx.Graph) -> None:
     :param VG: virtual graph
     :param IG: information graph
     """
-    fig, axs = plt.subplots(1, 3)
+    fig, axs = plt.subplots(1, 3, figsize=(15, 5))
     axs[0].set_title("Physical Graph")
     axs[1].set_title("Virtual Graph")
     axs[2].set_title("Information Graph")

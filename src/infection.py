@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 
 from src.plot import plot_update
 from src.utils import *
-from src.graphs import get_information_graph
+
 
 def critical_j(k: int, t: float) -> float:
     """
