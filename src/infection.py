@@ -1,22 +1,76 @@
+import random
+
 import networkx as nx
 import numpy as np
 import random as rd
-import scipy
-from matplotlib import pyplot as plt
 
-from src.plot import plot_update
+from src.config import zero_threshold
 from src.utils import *
 
 
-def critical_j(k: int, t: float) -> float:
+def get_critical_j(k: int, t: float) -> float:
     """
-    Compute the critical J value
+    Get the theoretical critical J value
+    To compute the critical J value, we use the following formula:
+    {k * log(k * t)} = Jc
 
-    :param k: degree
+    :param k: degree of the graph
     :param t: bare infection probability
     :return: return the critical J value
     """
+    t = t if t > 0 else zero_threshold
+    k = k if k > 0 else zero_threshold
     return k * np.log(k * t)
+
+
+def risk_perception(k: int, si: int, r: float, tau: float) -> float:
+    """
+    Compute the risk perception
+    To compute the risk perception, we use the following formula:
+    {-k/si * log(r/tau)} = Jc
+
+    :param k: average degree
+    :param si: number of infected neighbors
+    :param r: random number
+    :param tau: infection probability
+    :return: risk perception
+    """
+    tau = tau if tau > 0 else zero_threshold
+    si = si if si > 0 else zero_threshold
+    return -(k / si) * np.log(r / tau)
+
+
+def infected_prob(s: int, k: int, t: float, J: float) -> float:
+    """
+    Compute the probability of being infected
+    To calculate the probability of being infected, we use the following formula:
+    {t * exp(-J * s / k)} = u(s, k)
+
+    :param s: number of infected neighbors
+    :param k: degree of the node
+    :param t: bare infection probability
+    :param J: perception risk
+    :return: return the probability of being infected
+    """
+    t = t if t > 0 else zero_threshold
+    J = J if J > 0 else zero_threshold
+    k = k if k > 0 else zero_threshold
+    return t * np.exp(-J * s / k)
+
+
+def get_probability_being_infected(s: int, k: int, tau: float, J: float) -> float:
+    """
+    Compute the probability of being infected
+    To compute the probability of being infected, we use the following formula:
+    {1 - (1 - u(s, k))^s} = p(s, k)
+
+    :param s: number of infected neighbors
+    :param k: degree of the node
+    :param tau: bare infection probability
+    :param J: perception risk
+    :return: return the probability of being infected
+    """
+    return 1 - pow(1-infected_prob(s, k, tau, J), s)
 
 
 def init_infected(G: nx.Graph, n: int = 1) -> None:
@@ -24,43 +78,54 @@ def init_infected(G: nx.Graph, n: int = 1) -> None:
     Initialize the graph G with n infected nodes
 
     :param G: graph
-    :param n: number of infected nodes, default 10
+    :param n: number of infected nodes, default 1
     """
-    infected_nodes = rd.sample(range(G.number_of_nodes()), n)
+    infected_nodes = set(rd.sample(range(G.number_of_nodes()), n))
     for node in G.nodes:
-        if node in infected_nodes:
-            G.nodes[node][state] = infected
-        else:
-            G.nodes[node][state] = healthy
+        G.nodes[node][state] = infected if node in infected_nodes else healthy
 
 
-def get_infected(G: nx.Graph) -> int:
+def get_infected(G: nx.Graph, states: dict = None) -> int:
     """
     Count the number of infected nodes in a graph G
 
-    :param G:
+    :param G: graph
+    :param states: states of the nodes
     :return: return the number of infected nodes
     """
-    n = 0
-    for node in G.nodes:
-        if G.nodes[node][state] == infected:
-            n += 1
-    return n
+    if states:
+        return sum(states[node] == infected for node in G.nodes)
+    else:
+        return sum(G.nodes[node][state] == infected for node in G.nodes)
 
 
-def get_infected_neighbors(G: nx.Graph, node: int) -> int:
+def get_percentage_infected(G: nx.Graph, states: dict = None) -> float:
+    """
+    Compute the percentage of infected nodes in the graph G
+
+    :param G: graph
+    :param states: states of the nodes
+    :return: return the percentage of infected nodes
+    """
+    if states:
+        return get_infected(G, states) / G.number_of_nodes()
+    else:
+        return get_infected(G) / G.number_of_nodes()
+
+
+def get_infected_neighbors(G: nx.Graph, node: int, states: dict = None) -> int:
     """
     Count the number of infected neighbors of a node in the graph G
 
     :param G: graph
     :param node: list of neighbors
+    :param states: states of the nodes
     :return: return the number of infected neighbors
     """
-    n = 0
-    for node in G.neighbors(node):
-        if G.nodes[node][state] == infected:
-            n += 1
-    return n
+    if states:
+        return sum(states[n] == infected for n in G.neighbors(node))
+    else:
+        return sum(G.nodes[n][state] == infected for n in G.neighbors(node))
 
 
 def get_average_graph_degree(G: nx.Graph) -> int:
@@ -68,7 +133,7 @@ def get_average_graph_degree(G: nx.Graph) -> int:
     Compute the average degree of the graph G
 
     :param G: graph
-    :return: the percentage of the graph degree
+    :return: value of the average degree of the graph
     """
     return int(sum(d for n, d in G.degree()) / G.number_of_nodes())
 
@@ -87,198 +152,28 @@ def update_risk(G: nx.Graph, J: float, t: float) -> None:
         G.nodes[node][risk] = infected_prob(s, k, t, J)
 
 
-def infected_prob(s: int, k: int, t: float, J: float) -> float:
-    """
-    Compute the probability of being infected
-
-    :param s: number of infected neighbors
-    :param k: degree of the node
-    :param t: bare infection probability
-    :param J: perception risk
-    :return: return the probability of being infected {t * exp(-J * s / k)} = u(s, k)
-    """
-    return t * np.exp(-J * s / k)
-
-
-def new_infected(G: nx.Graph) -> nx.Graph:
+def new_infected(G: nx.Graph) -> None:
     """
     Propagate the disease in the graph G with infected probability
 
     :param G: graph
-    :return: return the propagated graph
     """
-    next_graph = G.copy()
     for node in G.nodes:
-        u = G.nodes[node][risk]
-        r = np.random.uniform(0, 1)
+        u = G.nodes[node][state]
+        r = random.random()
         if r < u and G.nodes[node][state] == healthy:
-            next_graph.nodes[node][state] = infected
-    return next_graph
+            G.nodes[node][state] = infected
 
 
-def change_state(G: nx.Graph, rec_prob: float, new_state: str) -> nx.Graph:
+def change_state(G: nx.Graph, rec_prob: float, new_state: str) -> None:
     """
     Change the state of all nodes in the graph G
 
     :param G: graph
     :param rec_prob: recovery probability
     :param new_state: new state
-    :return: return the graph with the changed state
     """
-    next_graph = G.copy()
     for node in G.nodes:
-        r = np.random.uniform(0, 1)
+        r = random.random()
         if G.nodes[node][state] == infected and r < rec_prob:
-            next_graph.nodes[node][state] = new_state
-    return next_graph
-
-# @TODO: Move to another file?
-# _________________________________________________________________
-# _________________________________________________________________
-# _______________________SIMULATION________________________________
-# _________________________________________________________________
-# _________________________________________________________________
-
-
-def infection(G: nx.Graph,
-              J: float,
-              t: float,
-              rec_prob: float,
-              iteration: int = 50,
-              infected_nodes: int = 1,
-              immunity: str = healthy,
-              plot: bool = False,
-              ) -> int:
-    """
-    Propagate the disease in the graph G
-
-    :param G: graph
-    :param J: perception risk
-    :param t: bare infection probability
-    :param rec_prob: prob of recovering at each step
-    :param iteration: number of iterations, default 10
-    :param infected_nodes: number of infected nodes, default 2
-    :param immunity: recovered if immunity is possible
-    :param plot: if the graph should be plotted
-    :return: return the number of infected nodes
-    """
-    init_infected(G, infected_nodes)
-
-    pos = nx.spring_layout(G)
-    plt.figure()
-
-    for i in range(iteration):
-        if plot:
-            plot_update(G, pos)
-        update_risk(G, J, t)
-        G = new_infected(G)
-        G = change_state(G, rec_prob, immunity)
-        print(f"Step: {i + 1}, Infected: {get_infected(G)}")
-        print(G.nodes.data())
-        print("\n")
-
-    return get_infected(G)
-
-
-def simulated_mean_field_infection(k: int, tau: float, c: float, T: int, J: float):
-    """
-    Simulated mean field infection
-    Function to simulate the evolution of an infection through mean field approximation
-
-    :param k: degree of the graph
-    :param tau: bare infection probability
-    :param c: initial percentage of infected nodes
-    :param T: iteration
-    :param J: perception risk
-    :return: return of the percentage of infected nodes
-    """
-    for _ in range(T):
-        cc = 0
-        for s in range(1, k+1):
-            cc += scipy.special.binom(k, s) * pow(c, s) * pow(1 - c, k - s) * s * infected_prob(s, k, tau, J)
-        c = cc
-    return c
-
-
-def simulated_approx_j_percolation(G: nx.Graph, tau: float, J: float, T: int) -> float:
-    """
-    Simulated J percolation with approximation
-
-    :param G: graph just infected
-    :param tau: bare infection probability
-    :param J: risk perception
-    :param T: number of iterations
-    :return: return the updated graph
-    """
-    for _ in range(T):
-        cG = G.copy()
-        for node in G.nodes:
-            k = G.degree(node)
-            s = get_infected_neighbors(cG, node)  # quenched version @TODO: implementation of the annealed version
-            r = np.random.uniform(0, 1)
-            if r < s * infected_prob(s, k, tau, J):
-                G.nodes[node][state] = infected
-            else:
-                G.nodes[node][state] = healthy
-    return get_infected(G) / G.number_of_nodes()
-
-
-def simulated_j_percolation(G: nx.Graph, tau: float, J: float, T: int) -> float:
-    """
-    Simulated J percolation
-
-    :param G: graph just infected
-    :param tau: bare infection probability
-    :param J: risk perception
-    :param T: number of iterations
-    :return: return the updated graph
-    """
-    for _ in range(T):
-        cG = G.copy()
-        for node in G.nodes:
-            k = G.degree(node)
-            s = get_infected_neighbors(cG, node)  # quenched version @TODO: implementation of the annealed version
-            r = np.random.uniform(0, 1)
-            # p(s,k) = (1-(pow(1-u(s,k), s)))
-            if r < (1-pow(1-infected_prob(s, k, tau, J), s)):
-                G.nodes[node][state] = infected
-            else:
-                G.nodes[node][state] = healthy
-    return get_infected(G) / G.number_of_nodes()
-
-
-def simulated_tau_percolation(G: nx.graph, T: int, tau: float) -> float:
-    for _ in range(T):
-        cG = G.copy()
-        for node in G.nodes:
-            if any(tau > np.random.uniform(0, 1) and cG.nodes[n][state] == infected for n in cG.neighbors(node)):
-                G.nodes[node][state] = infected
-            else:
-                G.nodes[node][state] = healthy
-    return get_infected(G) / G.number_of_nodes()
-
-
-def simulated_multiplex(PG: nx.Graph,VG: nx.Graph,q: float, tau: float, J: float, T: int):
-    """
-    Simulated J percolation
-
-    :param G: graph just infected
-    :param tau: bare infection probability
-    :param J: risk perception
-    :param T: number of iterations
-    :return: return the updated graph
-    """
-    IG = get_information_graph(PG,VG,q)
-    for _ in range(T):
-        cIG = IG.copy
-        for node in PG.nodes:
-            k = PG.degree(node)
-            s = get_infected_neighbors(cIG, node)  # quenched version @TODO: implementation of the annealed version
-            r = np.random.uniform(0, 1)
-            # p(s,k) = (1-(pow(1-u(s,k), s)))
-            if r < (1-pow(1-infected_prob(s, k, tau, J), s)):
-                PG.nodes[node][state] = infected
-                IG.nodes[node][state] = infected
-            else:
-                PG.nodes[node][state],IG.nodes[node][state] = healthy
-    return get_infected(PG) / PG.number_of_nodes()
+            G.nodes[node][state] = new_state

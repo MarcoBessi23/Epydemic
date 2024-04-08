@@ -1,62 +1,54 @@
-import networkx as nx
-import numpy as np
+import random
 
+import networkx as nx
+
+from src.config import init_infect
 from src.infection import init_infected
 
 
-def cycle_graph_test(nodes: int = 20, q: float = 0.5, infected: int = 3):
+def cycle_graph_test(nodes: int = 20) -> (nx.Graph, nx.Graph):
     """
     Test the cycle graph
 
-    :param nodes:
-    :param m:
-    :param q:
-    :param infected:
-    :return:
+    :param nodes: number of nodes
+    :return: Physical and Virtual graph
     """
     PG = nx.cycle_graph(nodes)
-    init_infected(PG, infected)
     VG = nx.cycle_graph(nodes)
-    IG = get_information_graph(PG, VG, q)
-    return PG, VG, IG
+    return PG, VG
 
 
-def scale_free_graph_test(nodes: int = 5, m: int = 3, q: float = 0.5, infected: int = 2):
+def scale_free_graph_test(nodes: int = 20, mPG: int = 6, mVG: int = 6) -> (nx.Graph, nx.Graph):
     """
     Test the scale free graph
 
-    :param nodes:
-    :param m: average degree
-    :param q:
-    :param infected:
-    :return:
+    :param nodes: number of nodes
+    :param mPG: average degree of the physical graph
+    :param mVG: average degree of the virtual graph
+    :return: Physical and Virtual graph
     """
-    PG = nx.barabasi_albert_graph(nodes, m)
-    init_infected(PG, infected)
-    VG = nx.barabasi_albert_graph(nodes, m)
-    IG = get_information_graph(PG, VG, q)
-    return PG, VG, IG
+    PG = nx.barabasi_albert_graph(nodes, mPG)
+    VG = nx.barabasi_albert_graph(nodes, mVG)
+    init_infected(PG, init_infect)
+    return PG, VG
 
 
-def random_graph_test(nodes: int = 10, pPG: float = 0.4, pVG: float = 0.6, q: float = 0.5, infected: int = 2):
+def random_graph_test(nodes: int = 20, pPG: float = 0.5, pVG: float = 0.5) -> (nx.Graph, nx.Graph):
     """
     Test the random graph
 
-    :param nodes:
-    :param pPG:
-    :param pVG:
-    :param q:
-    :param infected:
-    :return:
+    :param nodes: number of nodes
+    :param pPG: probability of the connection in the physical graph
+    :param pVG: probability of the connection in the virtual graph
+    :return: Physical and Virtual graph
     """
     PG = nx.gnp_random_graph(nodes, pPG)
-    init_infected(PG, infected)
     VG = nx.gnp_random_graph(nodes, pVG)
-    IG = get_information_graph(PG, VG, q)
-    return PG, VG, IG
+    init_infected(PG, init_infect)
+    return PG, VG
 
 
-def get_information_graph(PG: nx.Graph, VG: nx.Graph, q: float) -> nx.DiGraph:
+def get_information_graph(PG: nx.Graph, VG: nx.Graph, q: float = 0.5) -> nx.DiGraph:
     """
     Create the information graph from the two graphs Physical and Virtual graph
 
@@ -66,18 +58,18 @@ def get_information_graph(PG: nx.Graph, VG: nx.Graph, q: float) -> nx.DiGraph:
     :return: return the information graph
     """
     IG = nx.DiGraph()
-    IG.add_nodes_from(PG.nodes())
 
     for node in PG.nodes():
+        IG.add_node(node)
+
+        # Add outgoing links from the physical graph with probability 1 - q
         for neighbor in PG.neighbors(node):
-            r = np.random.uniform(0, 1)
-            if r < (1 - q):
+            if random.random() > q:
                 IG.add_edge(node, neighbor)
 
-    for node in VG.nodes():
+        # Add links from the virtual graph with probability q
         for neighbor in VG.neighbors(node):
-            r = np.random.uniform(0, 1)
-            if r < q:
+            if random.random() <= q:
                 IG.add_edge(node, neighbor)
 
     return IG
