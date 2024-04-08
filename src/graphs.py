@@ -26,7 +26,7 @@ def scale_free_graph_test(nodes: int = 5, m: int = 3, q: float = 0.5, infected: 
     Test the scale free graph
 
     :param nodes:
-    :param m:
+    :param m: average degree
     :param q:
     :param infected:
     :return:
@@ -56,7 +56,7 @@ def random_graph_test(nodes: int = 10, pPG: float = 0.4, pVG: float = 0.6, q: fl
     return PG, VG, IG
 
 
-def get_information_graph(PG: nx.Graph, VG: nx.Graph, q: float) -> nx.Graph:
+def get_information_graph(PG: nx.Graph, VG: nx.Graph, q: float) -> nx.DiGraph:
     """
     Create the information graph from the two graphs Physical and Virtual graph
 
@@ -65,7 +65,7 @@ def get_information_graph(PG: nx.Graph, VG: nx.Graph, q: float) -> nx.Graph:
     :param q: q value
     :return: return the information graph
     """
-    IG = nx.Graph()
+    IG = nx.DiGraph()
     IG.add_nodes_from(PG.nodes())
 
     for node in PG.nodes():

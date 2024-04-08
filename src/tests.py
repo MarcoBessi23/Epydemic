@@ -5,7 +5,7 @@ from src.config import zero_threshold
 from src.graphs import get_information_graph
 from src.infection import get_average_graph_degree, simulated_mean_field_infection, \
     simulated_tau_percolation, simulated_j_percolation
-from src.plot import plot_critical_j, plot_critical_t, plot_q_value, plot_all_graphs
+from src.plot import plot_critical_j, plot_critical_t, plot_q_value, plot_all_graphs, plot_t_value_percolation
 from src.percolation import critic_j_percolation, simple_tau_percolation, multiplex_percolation
 from src.utils import *
 
@@ -136,15 +136,20 @@ def multiplex_percolation_critical_j_test_test(PG: nx.Graph, VG: nx.Graph, T: in
     :return: return the critical J values
     """
     results = {q_test: [], t_test: [], j_pred: []}
+    results_t = {t: {q_test: [], j_pred: []} for t in ts}
     for q in qs:
         IG = get_information_graph(PG, VG, q)
         plot_all_graphs(PG, VG, IG)
         for t in reversed(ts):
             # Calculate the jc prediction about percolation
-            jc_pred = multiplex_percolation(IG.copy(), PG.copy(), t, T, q)
+            jc_pred = multiplex_percolation(IG.copy(), PG.copy(), t, T)
             results[q_test].append(q)
             results[t_test].append(t)
             results[j_pred].append(jc_pred if jc_pred > 0 else 0)
+
+            results_t[t][q_test].append(q)
+            results_t[t][j_pred].append(jc_pred if jc_pred > 0 else 0)
             print(f"q: {round(q, 2)}, t: {round(t, 2)}, jc: {round(jc_pred, 2)}")
         print("--------------------------------------------------", end="\n\n")
     plot_q_value(results, file=q_plot)
+    plot_t_value_percolation(results_t, file=t_plot)

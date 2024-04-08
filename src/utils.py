@@ -23,6 +23,7 @@ approx_plot_jc_plot = "approx_critical_j.png"
 critical_j_plot = "critical_j.png"
 critical_t_plot = "critical_t.png"
 q_plot = "q_plot.png"
+t_plot = "t_plot.png"
 
 # Colors for the graph
 blue = "cornflowerblue"

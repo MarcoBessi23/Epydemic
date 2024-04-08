@@ -128,3 +128,23 @@ def plot_q_value(critics: dict, file: str) -> None:
     plt.savefig(path_plots + file)
     plt.show()
 
+
+def plot_t_value_percolation(critics: dict, file: str) -> None:
+    """
+    Plot the value of the Information Graph
+    :param critics:
+    :param file:
+    :return:
+    """
+    plt.title("Tau values")
+    keys = list(critics.keys())
+    for i in keys:
+        plt.plot(critics[i][q_test], critics[i][j_pred], label=f"Tau: {i}", marker="o", linestyle="-")
+    plt.xlabel("Q")
+    plt.ylabel("Jc")
+    plt.legend()
+    plt.savefig(path_plots + file)
+    plt.show()
+
+
+

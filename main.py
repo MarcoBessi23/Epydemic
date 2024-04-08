@@ -8,8 +8,10 @@ def main():
     # GRAPHS FOR TESTS
     # PG, VG, IG = cycle_graph_test()
     # TODO: Check components graphs divided by zero
-    PG, VG, IG = random_graph_test(n_nodes, pPG=0.5, pVG=0.2, infected=init_infect)
-    # PG, VG, IG = scale_free_graph_test(nodes, m, 0.5, init_infect)
+    PG, VG, IG = random_graph_test(n_nodes, pPG=prob_m, pVG=prob_m, infected=init_infect)
+    print(get_average_graph_degree(PG))
+    print(get_average_graph_degree(VG))
+    # PG, VG, IG = scale_free_graph_test(n_nodes, m, 0.5, init_infect)
     # plot_all_graphs(PG, VG, IG)
 
     # TESTS
