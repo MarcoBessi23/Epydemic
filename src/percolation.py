@@ -3,7 +3,7 @@ import networkx as nx
 import numpy as np
 
 from src.infection import infected_prob, get_infected_neighbors, risk_perception, \
-    prob_being_infected, get_percentage_infected, get_critical_j, get_average_graph_degree
+    prob_being_infected, get_percentage_infected
 from src.utils import *
 
 # ______________________________________________________________________________________________________________________
@@ -139,7 +139,7 @@ def critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
 
     # Initialize J values for each node
     # TODO evaluation the initialization of J values
-    j_values = {node: 0.0 for node in G.nodes()}
+    j_values = {node: np.random.uniform(100, 101) for node in G.nodes()}
 
     for _ in range(T):
         cj = j_values.copy()
@@ -154,10 +154,11 @@ def critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
                 jp = risk_perception(k, s, r, tau)
                 m.append(min(cj[j], jp))
             # Update J with the maximum value calculated
-            j_values[node] = max(m)
+            j_values[node] = max(m+[0])
     return max(j_values.values())
 
 
+# FIXME Check if the function is working properly
 def compact_critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
     """
     Calculate the critical J values for percolation.
@@ -178,7 +179,7 @@ def compact_critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
 
     # Initialize J values for each node
     # TODO evaluation the initialization of J values
-    j_values = {node: 0.0 for node in G.nodes()}
+    j_values = {node: np.random.uniform(100, 101) for node in G.nodes()}
 
     for _ in range(T):
         cj = j_values.copy()

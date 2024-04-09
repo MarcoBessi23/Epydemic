@@ -1,10 +1,12 @@
 import networkx as nx
-import numpy as np
 import scipy
 from scipy import interpolate
 from matplotlib import pyplot as plt
-
+from src.config import *
 from src.utils import *
+
+# ______________________________________________________________________________________________________________________
+# Plotting for Graphs
 
 
 def plot_graph(G: nx.Graph, pos: dict, ax, oriented: bool = False, show: bool = False) -> None:
@@ -60,39 +62,54 @@ def plot_update(G: nx.Graph, pos: dict) -> None:
     plt.pause(1)
 
 
-def plot_critical_j(critics: dict, file: str, prediction: bool = True) -> None:
+# ______________________________________________________________________________________________________________________
+# Plotting for Critical J and Tau For mean field and percolation
+
+def plot_critical_j(results: dict, file: str, prediction: bool = True) -> None:
     """
     Plot the critical J values
 
-    :param critics: dict of critical values
+    :param results: dict of critical values
     :param file: file name
     :param prediction: if the prediction should be plotted
     """
-    plt.title("Critical J values")
-    plt.plot(critics[t_test], critics[j_test], label="Critical J", color=blue, marker="o", linestyle="-")
-    if prediction:
-        plt.plot(critics[t_test], critics[j_pred], label="Predicted J", color=black, marker="", linestyle="--")
-    plt.xlabel("Tau")
+    colors = [blue, red, green, black]  # Add more colors if needed
+
+    plt.title("Infection model and mean-field approximation: N = " + str(n_nodes))
+    for graph_type in results:
+        color = colors.pop(0)
+        plt.plot(results[graph_type][t_test], results[graph_type][j_test], label=graph_type, color=color, marker="o", linestyle="-")
+        if prediction:
+            plt.plot(results[graph_type][t_test], results[graph_type][j_pred], label="Predicted J", color=color, marker="", linestyle="--")
+    plt.xlabel("τ")
     plt.ylabel("Jc")
     plt.legend()
     plt.savefig(path_plots + file)
     plt.show()
 
 
-def plot_critical_t(critics: dict, file: str, prediction: bool = True) -> None:
+# ______________________________________________________________________________________________________________________
+# Plotting Percolation for c and tau values
+
+
+def plot_critical_t(results: dict, file: str, prediction: bool = True) -> None:
     """
     Plot the critical tau values
 
-    :param critics: dict of critical values
+    :param results: dict of results
     :param file: file name
     :param prediction: if the prediction should be plotted
     """
-    plt.title("Critical Tau values")
-    plt.plot(critics[t_test], critics[t_test], label="Critical Tau", color=blue, marker="o", linestyle="-")
-    if prediction:
-        plt.plot(critics[t_test], critics[t_pred], label="Predicted Tau", color=black, marker="", linestyle="--")
-    plt.xlabel("Tc")
-    plt.ylabel("Tc")
+
+    colors = [blue, red, green, black]  # Add more colors if needed
+    plt.title("Percolation in single-layered networks: N = " + str(n_nodes))
+    for graph_type in results:
+        color = colors.pop(0)
+        plt.plot(results[graph_type][t_test], results[graph_type][v_pred], label=graph_type, marker="", linestyle="-", color=color)
+        if prediction:
+            plt.plot(results[graph_type][t_pred], 0, label="Theory τc", marker="s", linestyle=" ", color=color)
+    plt.xlabel("τ")
+    plt.ylabel("c")
     plt.legend()
     plt.savefig(path_plots + file)
     plt.show()
@@ -106,7 +123,7 @@ def plot_q_value(critics: dict, file: str) -> None:
     :return:
     """
     fig, ax = plt.subplots()
-    ax.set(xlabel='Tau', ylabel='q', title='Phase Diagram')
+    ax.set(xlabel='τ', ylabel='q', title='Phase Diagram')
 
     x = np.array(critics[t_test])
     y = np.array(critics[q_test])
@@ -139,7 +156,7 @@ def plot_t_value_percolation(critics: dict, file: str) -> None:
     plt.title("Tau values")
     keys = list(critics.keys())
     for i in keys:
-        plt.plot(critics[i][q_test], critics[i][j_pred], label=f"Tau: {i}", marker="o", linestyle="-")
+        plt.plot(critics[i][q_test], critics[i][j_pred], label=f"τ: {i}", marker="o", linestyle="-")
     plt.xlabel("Q")
     plt.ylabel("Jc")
     plt.legend()

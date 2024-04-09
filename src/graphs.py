@@ -15,6 +15,7 @@ def cycle_graph_test(nodes: int = 20) -> (nx.Graph, nx.Graph):
     """
     PG = nx.cycle_graph(nodes)
     VG = nx.cycle_graph(nodes)
+    init_infected(PG, init_infect)
     return PG, VG
 
 
