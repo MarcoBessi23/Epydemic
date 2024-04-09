@@ -3,6 +3,22 @@ import scipy
 from src.infection import infected_prob
 
 
+def binomial(n: int, k: int) -> int:
+    """
+    Binomial coefficient
+    Function to calculate the binomial coefficient
+
+    :param n: number of elements
+    :param k: number of elements to choose
+    :return: return the binomial coefficient
+    """
+    if k > n:
+        return 0
+    if k == 0 or k == n:
+        return 1
+    return binomial(n - 1, k - 1) + binomial(n - 1, k)
+
+
 def simulated_mean_field_infection(k: int, tau: float, c: float, T: int, J: float) -> float:
     """
     Simulated mean field infection
