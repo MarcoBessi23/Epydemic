@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import networkx as nx
 
@@ -35,9 +37,10 @@ def mean_field_jc_test(k: int,
         jc_pred = get_critical_j(k, t)
         print(f"MF-Critical J prediction: {jc_pred}")
         for j in js:
-            print(f"t: {round(t,2)}, j: {round(j,2)}")
+            print(f"t: {round(t,2)}, j: {round(j,2)}", end="")
             v = simulated_mean_field_infection(k, t, c, T, j)
-            if v <= zero_threshold:
+            print(f" Valore di c: {v}")
+            if zero_threshold >= v >= 0:
                 results[t_test].append(t)
                 results[j_test].append(j)
                 results[j_pred].append(jc_pred if jc_pred > 0 else 0)

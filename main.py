@@ -33,8 +33,8 @@ def mean_field_test():
 
     # RANDOM GRAPH WITH K = 6
     kk = 6
-    graph_type = "<k>=" + str(k)
-    result = mean_field_jc_test(k, perc_init_infect, iterations, ts, js)
+    graph_type = "<k>=" + str(kk)
+    result = mean_field_jc_test(kk, perc_init_infect, iterations, ts, js)
     results[graph_type] = result
 
     # RANDOM GRAPH WITH K = 5
