@@ -6,8 +6,8 @@ from src.graphs import get_information_graph
 from src.infection import get_average_graph_degree, get_critical_j
 from src.mean_field import simulated_mean_field_infection
 from src.plot import plot_critical_j, plot_q_value
-from src.percolation import (critic_j_percolation, simple_tau_percolation, multiplex_percolation,
-                             simulated_j_percolation, simulated_tau_percolation)
+from src.percolation import (critic_j_percolation, tau_simple_percolation, multiplex_percolation,
+                             simulated_j_percolation, simulated_simple_percolation)
 from src.utils import *
 
 # ______________________________________________________________________________________________________________________
@@ -65,10 +65,10 @@ def simple_tau_percolation_test(G: nx.Graph,
 
     results = {t_test: [], t_pred: []}
 
-    tc_pred = simple_tau_percolation(G, iterations=T)
+    tc_pred = tau_simple_percolation(G, iterations=T)
     print(f"Percolation-Critical tau prediction: {tc_pred}")
     for t in reversed(ts):
-        v = simulated_tau_percolation(G, T, tau=t)
+        v = simulated_simple_percolation(G, T, tau=t)
         print(f"t: {round(t,2)} Valore di c: {v}")
         if v <= zero_threshold:
             results[t_test].append(t)

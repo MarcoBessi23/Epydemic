@@ -3,7 +3,7 @@ import networkx as nx
 import numpy as np
 
 from src.infection import infected_prob, get_infected_neighbors, risk_perception, \
-    prob_being_infected, get_percentage_infected
+    prob_being_infected, get_percentage_infected, get_critical_j, get_average_graph_degree
 from src.utils import *
 
 # ______________________________________________________________________________________________________________________
@@ -63,9 +63,11 @@ def simulated_approx_j_percolation(G: nx.Graph, tau: float, J: float, T: int) ->
 # Simple Percolation Tests (Direct Percolation)
 
 
-def simulated_tau_percolation(G: nx.graph, T: int, tau: float) -> float:
+def simulated_simple_percolation(G: nx.graph, T: int, tau: float) -> float:
     """
-    Simulated tau percolation
+    Simulated simple percolation:
+    TODO add formula for simple percolation
+    xi(t+1) =
 
     :param G: graph
     :param T: number of iterations
@@ -82,7 +84,7 @@ def simulated_tau_percolation(G: nx.graph, T: int, tau: float) -> float:
     return get_percentage_infected(G, states)
 
 
-def simple_tau_percolation(G: nx.Graph, iterations: int) -> float:
+def tau_simple_percolation(G: nx.Graph, iterations: int) -> float:
     """
     Update the values of tau parameters associated with the nodes in graph G based on simple percolation.
 
@@ -108,10 +110,9 @@ def simple_tau_percolation(G: nx.Graph, iterations: int) -> float:
         for node in G.nodes():
             # Calculate max values for all neighbors
             # Update tau[node] using the minimum of max_values
-            # append 1 to max_values before finding the min
-            # FIXME: Check if necessary to append 1 to max_values
-            # tau[node] = np.min([[1] + max(random.random(), ct[j]) for j in G.neighbors(node)])
-            tau[node] = np.min([max(random.random(), ct[j]) for j in G.neighbors(node)])
+
+            # NOTFIXME: Check if necessary to append 1 to max_values before finding the min
+            tau[node] = np.min([1]+[max(random.random(), ct[j]) for j in G.neighbors(node)])
     return min(tau.values())
 
 # ______________________________________________________________________________________________________________________
@@ -138,12 +139,12 @@ def critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
 
     # Initialize J values for each node
     # TODO evaluation the initialization of J values
-    j_values = {node: random.random() for node in G.nodes()}
+    j_values = {node: 0.0 for node in G.nodes()}
 
     for _ in range(T):
         cj = j_values.copy()
         for node in G.nodes():
-            m = [0]
+            m = []
             k = G.degree(node)
             for j in G.neighbors(node):
                 # Calculate sum term
@@ -177,13 +178,12 @@ def compact_critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
 
     # Initialize J values for each node
     # TODO evaluation the initialization of J values
-    j_values = {node: random.random() for node in G.nodes()}
+    j_values = {node: 0.0 for node in G.nodes()}
 
     for _ in range(T):
         cj = j_values.copy()
         for node in G.nodes():
             k = G.degree(node)
-            r = [random.random() for _ in G.neighbors(node)]
             r = np.random.uniform(0, 1, len(list(G.neighbors(node))))
             s = [sum(cj[n] >= cj[j] for n in G.neighbors(node)) for j in G.neighbors(node)]
             jp = [risk_perception(k, si, r, tau) for si in s]

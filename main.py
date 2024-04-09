@@ -1,4 +1,5 @@
 from src.graphs import *
+from src.plot import plot_all_graphs
 from src.tests import *
 from src.config import *
 
@@ -21,10 +22,10 @@ def critical_j_test():
 
 def percolation_test():
     PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
-    # FIXME The percolation jc test is not working
-    # percolation_jc_test(PG, iterations, ts, js)
     # simple_tau_percolation_test(PG, iterations, ts)
-    multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
+    # FIXME The percolation jc test is not working
+    percolation_jc_test(PG, iterations, ts, js)
+    # multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
 
 
 def main():
