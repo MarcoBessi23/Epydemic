@@ -37,9 +37,9 @@ def mean_field_jc_test(k: int,
         jc_pred = get_critical_j(k, t)
         print(f"MF-Critical J prediction: {jc_pred}")
         for j in js:
-            print(f"t: {round(t,2)}, j: {round(j,2)}", end="")
+            print(f"t: {round(t,2)}, j: {round(j,2)}, ", end="")
             v = simulated_mean_field_infection(k, t, c, T, j)
-            print(f" Valore di c: {v}")
+            print(f"c: {round(v,2)}")
             if zero_threshold >= v >= 0:
                 results[t_test].append(t)
                 results[j_test].append(j)

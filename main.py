@@ -1,3 +1,5 @@
+import warnings
+
 from src.graphs import *
 from src.plot import plot_all_graphs, plot_critical_t
 from src.tests import *
@@ -28,17 +30,12 @@ def test_graphs():
     plot_all_graphs(PG, VG, IG)
 
 
+# TODO Test with different values of k and different number of nodes and initial infected
 def mean_field_test():
     results = {}
 
     # RANDOM GRAPH WITH K = 6
     kk = 6
-    graph_type = "<k>=" + str(kk)
-    result = mean_field_jc_test(kk, perc_init_infect, iterations, ts, js)
-    results[graph_type] = result
-
-    # RANDOM GRAPH WITH K = 5
-    kk = 5
     graph_type = "<k>=" + str(kk)
     result = mean_field_jc_test(kk, perc_init_infect, iterations, ts, js)
     results[graph_type] = result
@@ -49,10 +46,17 @@ def mean_field_test():
     result = mean_field_jc_test(kk, perc_init_infect, iterations, ts, js)
     results[graph_type] = result
 
+    # RANDOM GRAPH WITH K = 2
+    kk = 2
+    graph_type = "<k>=" + str(kk)
+    result = mean_field_jc_test(kk, perc_init_infect, iterations, ts, js)
+    results[graph_type] = result
+
     # PLOT ALL RESULTS
     plot_critical_j(results, file=mean_field_jc_plot)
 
 
+# TODO Test with different values of k and different number of nodes and initial infected
 def simple_percolation_test():
     results = {}
 
@@ -105,6 +109,9 @@ def multiplex_percolation_test():
 
 
 def main():
+    # Ignore warnings
+    warnings.filterwarnings("ignore")
+
     # GRAPH TESTS
     # test_graphs()
 

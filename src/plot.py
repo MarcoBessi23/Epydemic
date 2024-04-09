@@ -78,9 +78,9 @@ def plot_critical_j(results: dict, file: str, prediction: bool = True) -> None:
     plt.title("Infection model and mean-field approximation: N = " + str(n_nodes))
     for graph_type in results:
         color = colors.pop(0)
-        plt.plot(results[graph_type][t_test], results[graph_type][j_test], label=graph_type, color=color, marker="o", linestyle="-")
+        plt.plot(results[graph_type][t_test], results[graph_type][j_test], label=graph_type, color=color, marker=".", linestyle="--")
         if prediction:
-            plt.plot(results[graph_type][t_test], results[graph_type][j_pred], label="Predicted J", color=color, marker="", linestyle="--")
+            plt.plot(results[graph_type][t_test], results[graph_type][j_pred], label="Theory: "+graph_type, color=black, marker="", linestyle="--")
     plt.xlabel("τ")
     plt.ylabel("Jc")
     plt.legend()
