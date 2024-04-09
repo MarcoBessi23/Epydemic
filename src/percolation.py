@@ -1,38 +1,46 @@
 import random
 import networkx as nx
 import numpy as np
-import scipy
 
 from src.infection import infected_prob, get_infected_neighbors, risk_perception, \
-    get_probability_being_infected, get_percentage_infected, get_infected
+    prob_being_infected, get_percentage_infected
 from src.utils import *
 
+# ______________________________________________________________________________________________________________________
+# Simulating the J percolation
 
-def simulated_mean_field_infection(k: int, tau: float, c: float, T: int, J: float) -> float:
+
+def simulated_j_percolation(G: nx.Graph, tau: float, J: float, T: int) -> float:
     """
-    Simulated mean field infection
-    Function to simulate the evolution of an infection through mean field approximation
+    Simulated J percolation using the formula for the probability of being infected:
+    {1 - (1 - u(s, k))^s} = p(s, k)
 
-    :param k: degree of the graph
+
+    :param G: graph just infected
     :param tau: bare infection probability
-    :param c: initial percentage of infected nodes
-    :param T: iteration
-    :param J: perception risk
-    :return: return of the percentage of infected nodes
+    :param J: risk perception
+    :param T: number of iterations
+    :return: the percentage of infected nodes
     """
-    # FIXME: nan values from the scipy.special.binom and pow functions?
+    # Get the states of the nodes
+    states = {node: G.nodes[node][state] for node in G.nodes}
+
     for _ in range(T):
-        # binoms = [scipy.special.binom(k, s) for s in range(1, k + 1)]
-        # infected_probs = [infected_prob(s, k, tau, J) for s in range(1, k + 1)]
-        # pows = [pow(c, s) * pow(1 - c, k - s) for s in range(1, k + 1)]
-        c = sum(scipy.special.binom(k, s) * pow(c, s) * pow(1 - c, k - s) * s * infected_prob(s, k, tau, J)
-                for s in range(1, k + 1))
-    return c
+        c_states = states
+        for node in G.nodes:
+            k = G.degree(node)
+            # TODO: implementation of the annealed version
+            s = get_infected_neighbors(G, node, c_states)  # quenched version
+            r = random.random()
+            psk = prob_being_infected(s, k, tau, J)
+            states[node] = infected if r < psk else healthy
+    return get_percentage_infected(G, states)
 
 
 def simulated_approx_j_percolation(G: nx.Graph, tau: float, J: float, T: int) -> float:
     """
-    Simulated J percolation with approximation
+    Simulated J percolation with approximation of the formula for the probability of being infected:
+    {t * exp(-J * s / k)} = u(s, k)
 
     :param G: graph just infected
     :param tau: bare infection probability
@@ -51,29 +59,8 @@ def simulated_approx_j_percolation(G: nx.Graph, tau: float, J: float, T: int) ->
     return get_percentage_infected(G)
 
 
-def simulated_j_percolation(G: nx.Graph, tau: float, J: float, T: int) -> float:
-    """
-    Simulated J percolation
-
-    :param G: graph just infected
-    :param tau: bare infection probability
-    :param J: risk perception
-    :param T: number of iterations
-    :return: the percentage of infected nodes
-    """
-    # Get the states of the nodes
-    states = {node: G.nodes[node][state] for node in G.nodes}
-
-    for _ in range(T):
-        c_states = states
-        for node in G.nodes:
-            k = G.degree(node)
-            # TODO: implementation of the annealed version
-            s = get_infected_neighbors(G, node, c_states)  # quenched version
-            r = random.random()
-            psk = get_probability_being_infected(s, k, tau, J)
-            states[node] = infected if r < psk else healthy
-    return get_percentage_infected(G, states)
+# ______________________________________________________________________________________________________________________
+# Simple Percolation Tests (Direct Percolation)
 
 
 def simulated_tau_percolation(G: nx.graph, T: int, tau: float) -> float:
@@ -126,6 +113,9 @@ def simple_tau_percolation(G: nx.Graph, iterations: int) -> float:
             # tau[node] = np.min([[1] + max(random.random(), ct[j]) for j in G.neighbors(node)])
             tau[node] = np.min([max(random.random(), ct[j]) for j in G.neighbors(node)])
     return min(tau.values())
+
+# ______________________________________________________________________________________________________________________
+# Infection with risk percolation
 
 
 def critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
@@ -193,6 +183,7 @@ def compact_critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
         cj = j_values.copy()
         for node in G.nodes():
             k = G.degree(node)
+            r = [random.random() for _ in G.neighbors(node)]
             r = np.random.uniform(0, 1, len(list(G.neighbors(node))))
             s = [sum(cj[n] >= cj[j] for n in G.neighbors(node)) for j in G.neighbors(node)]
             jp = [risk_perception(k, si, r, tau) for si in s]
@@ -200,6 +191,9 @@ def compact_critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
             j_values[node] = max(np.append(0, np.minimum(cjs, jp)))
     return max(j_values.values())
 
+
+# ______________________________________________________________________________________________________________________
+# The self-organized percolation method for multiplex networks
 
 def multiplex_percolation(IG: nx.DiGraph, PG: nx.graph, tau: float, T: int) -> float:
     """

@@ -58,7 +58,7 @@ def infected_prob(s: int, k: int, t: float, J: float) -> float:
     return t * np.exp(-J * s / k)
 
 
-def get_probability_being_infected(s: int, k: int, tau: float, J: float) -> float:
+def prob_being_infected(s: int, k: int, tau: float, J: float) -> float:
     """
     Compute the probability of being infected
     To compute the probability of being infected, we use the following formula:

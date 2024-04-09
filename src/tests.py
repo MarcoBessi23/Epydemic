@@ -4,10 +4,14 @@ import networkx as nx
 from src.config import zero_threshold
 from src.graphs import get_information_graph
 from src.infection import get_average_graph_degree, get_critical_j
-from src.plot import plot_critical_j, plot_q_value, plot_all_graphs
-from src.simulation import critic_j_percolation, simple_tau_percolation, multiplex_percolation, \
-    simulated_mean_field_infection, simulated_j_percolation, simulated_tau_percolation
+from src.mean_field import simulated_mean_field_infection
+from src.plot import plot_critical_j, plot_q_value
+from src.percolation import (critic_j_percolation, simple_tau_percolation, multiplex_percolation,
+                             simulated_j_percolation, simulated_tau_percolation)
 from src.utils import *
+
+# ______________________________________________________________________________________________________________________
+# Mean Field Tests
 
 
 def mean_field_jc_test(G: nx.Graph,
@@ -44,6 +48,9 @@ def mean_field_jc_test(G: nx.Graph,
         print("--------------------------------------------------", end="\n\n")
     plot_critical_j(results, file=mean_field_jc_plot)
 
+# ______________________________________________________________________________________________________________________
+# Simple Percolation Tests (Direct Percolation)
+
 
 def simple_tau_percolation_test(G: nx.Graph,
                                 T: int,
@@ -69,6 +76,9 @@ def simple_tau_percolation_test(G: nx.Graph,
             break
     print("--------------------------------------------------", end="\n\n")
     # plot_critical_t(results, file=critical_t_plot)
+
+# ______________________________________________________________________________________________________________________
+# Infection with risk percolation
 
 
 def percolation_jc_test(G: nx.Graph,
@@ -101,6 +111,9 @@ def percolation_jc_test(G: nx.Graph,
                 break
         print("--------------------------------------------------", end="\n\n")
     plot_critical_j(results, file=approx_plot_jc_plot)
+
+# ______________________________________________________________________________________________________________________
+# The self-organized percolation method for multiplex networks
 
 
 def multiplex_percolation_jc_test(PG: nx.Graph,
