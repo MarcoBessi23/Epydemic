@@ -17,6 +17,7 @@ g_type = "graph_type"
 
 # Path plotting
 path_plots = "./results/plots/"
+path_results = "./results/csv/"
 
 # Test file path
 mean_field_jc_plot = "mf_critical_j.png"
@@ -26,6 +27,9 @@ critical_j_plot = "critical_j.png"
 critical_t_plot = "critical_t.png"
 q_plot = "q_plot.png"
 t_plot = "Percolation in single-layered networks.png"
+
+# Csv file path
+
 
 # Colors for the graph
 blue = "cornflowerblue"

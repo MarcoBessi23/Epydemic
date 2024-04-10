@@ -7,8 +7,9 @@ js = np.arange(0, 200, step)  # Risk perception
 ts = np.arange(0, 1+step, step)  # Tau values
 qs = np.arange(0, 1+step, step)  # Connection probability for Information Graph
 
-iterations = 1000  # Iteration
+iterations = 100  # Iteration
 zero_threshold = 1e-4  # Zero threshold
+eps = 1e-4  # Epsilon
 
 # Values for the graph
 n_nodes = 10000  # Number of nodes

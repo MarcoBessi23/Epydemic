@@ -2,6 +2,7 @@ import warnings
 
 from src.graphs import *
 from src.plot import plot_all_graphs, plot_critical_t
+from src.save_csv import save_results
 from src.tests import *
 from src.config import *
 
@@ -94,10 +95,11 @@ def percolation_test():
     results = {}
 
     PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
-    # FIXME The percolation jc test and multiplex percolation is not working
+    # TODO The percolation jc test and multiplex percolation is not working
     graph_type = "Poisson <k>=" + str(k)
+    print(f"Graph type: {graph_type}")
     # percolation_jc_test(PG, iterations, ts, js)
-    result = percolation_jc_test_2(PG, iterations, ts)
+    result = percolation_jc_test_3(PG, iterations, ts)
     results[graph_type] = result
 
     plot_critical_j(results, file=approx_plot_jc_plot, prediction=False)
@@ -105,7 +107,9 @@ def percolation_test():
 
 def multiplex_percolation_test():
     PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
-    multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
+    results = multiplex_percolation_jc_test_2(PG, VG, iterations, ts, qs)
+    # save_results(results, file=approx_plot_jc_plot)
+    plot_q_value(results, file=q_plot)
 
 
 def main():
@@ -116,10 +120,10 @@ def main():
     # test_graphs()
 
     # TESTS
-    mean_field_test()
+    # mean_field_test()
     # simple_percolation_test()
     # percolation_test()
-    # multiplex_percolation_test()
+    multiplex_percolation_test()
 
 
 if __name__ == "__main__":

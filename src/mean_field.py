@@ -1,4 +1,3 @@
-import numpy as np
 import scipy
 
 from src.infection import infected_prob
@@ -16,8 +15,7 @@ def simulated_mean_field_infection(k: int, tau: float, c: float, T: int, J: floa
     :param J: perception risk
     :return: return of the percentage of infected nodes
     """
-    # NOTFIXME: negative values from the pow function?
-    for t in range(T):
-        c = sum(scipy.special.binom(k, s) * (c ** s) * ((1 - c) ** (k - s)) * s * infected_prob(s, k, tau, J) for s in
-                range(k))
+    for _ in range(T):
+        c = abs(sum(scipy.special.binom(k, s) * (c ** s) * ((1 - c) ** (k - s)) * s * infected_prob(s, k, tau, J)
+                    for s in range(k)))
     return c

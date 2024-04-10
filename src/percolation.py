@@ -119,6 +119,7 @@ def tau_simple_percolation(G: nx.Graph, iterations: int) -> float:
 # Infection with risk percolation
 
 
+# FIXME Check if the function is working properly
 def critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
     """
     Calculate the critical J values for percolation.
@@ -138,57 +139,15 @@ def critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
     """
 
     # Initialize J values for each node
-    # TODO evaluation the initialization of J values
-    j_values = {node: np.random.uniform(100, 101) for node in G.nodes()}
-
-    for _ in range(T):
-        cj = j_values.copy()
-        for node in G.nodes():
-            m = []
-            k = G.degree(node)
-            for j in G.neighbors(node):
-                # Calculate sum term
-                s = sum(cj[n] >= cj[j] for n in G.neighbors(node))
-                r = random.random()
-                # Calculate min max term
-                jp = risk_perception(k, s, r, tau)
-                m.append(min(cj[j], jp))
-            # Update J with the maximum value calculated
-            j_values[node] = max(m+[0])
-    return max(j_values.values())
-
-
-# FIXME Check if the function is working properly
-def compact_critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
-    """
-    Calculate the critical J values for percolation.
-
-    I aim to determine the parameter J for which there is no long-term infection spread.
-    [J < -(k/s) ln(r/τ)] is the condition for a node to become infected.
-    In the function, I extract r and check if it equals 1.
-    J[i] is the minimum value of J that causes node i to become infected.
-    Skipping the calculations, I directly move to formula (15), which is the one I want to implement.
-    Ji (t + 1) = max min (Jj(t), (-ki/si[Jj(t)]) * ln(rij(t)/τ)).
-    si[J] is a function that sums [Jj(t) >= J] for all neighbors.
-
-    :param G: NetworkX graph
-    :param tau: Infection probability
-    :param T: Number of iterations
-    :return: Updated critical J values
-    """
-
-    # Initialize J values for each node
-    # TODO evaluation the initialization of J values
-    j_values = {node: np.random.uniform(100, 101) for node in G.nodes()}
+    j_values = {node: float('inf') for node in G.nodes()}
 
     for _ in range(T):
         cj = j_values.copy()
         for node in G.nodes():
             k = G.degree(node)
-            r = np.random.uniform(0, 1, len(list(G.neighbors(node))))
-            s = [sum(cj[n] >= cj[j] for n in G.neighbors(node)) for j in G.neighbors(node)]
-            jp = [risk_perception(k, si, r, tau) for si in s]
-            cjs = [cj[j] for j in G.neighbors(node)]
+            s = np.array([sum(cj[n] >= cj[j] for n in G.neighbors(node)) for j in G.neighbors(node)])
+            jp = np.array([risk_perception(k, si, np.random.random(), tau) for si in s])
+            cjs = np.array([cj[j] for j in G.neighbors(node)])
             j_values[node] = max(np.append(0, np.minimum(cjs, jp)))
     return max(j_values.values())
 
@@ -196,6 +155,7 @@ def compact_critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
 # ______________________________________________________________________________________________________________________
 # The self-organized percolation method for multiplex networks
 
+# FIXME Check if the function is working properly
 def multiplex_percolation(IG: nx.DiGraph, PG: nx.graph, tau: float, T: int) -> float:
     """
     Multiplex percolation model
@@ -208,20 +168,14 @@ def multiplex_percolation(IG: nx.DiGraph, PG: nx.graph, tau: float, T: int) -> f
     """
 
     # Initialize J values for each node
-    # TODO evaluation the initialization of J values
-    j_values = {node: random.random() for node in PG.nodes()}
+    j_values = {node: float('inf') for node in PG.nodes()}
 
     for _ in range(T):
         cj = j_values.copy()
         for node in PG.nodes():
-            m = [0]
-            k = PG.degree(node)  # Calculate the degree of node i
-            for j in PG.neighbors(node):  # Iterate over neighbors of node i in PG
-                # Count neighbors with J greater than J[j]
-                si = sum(cj[z] >= cj[j] for z in IG.neighbors(node))
-                # Calculate min max term
-                r = random.random()
-                jp = risk_perception(k, si, r, tau)
-                m.append(min(cj[j], jp))
-            j_values[node] = max(m)  # Update J[i] with the maximum value calculated
+            k = PG.degree(node)
+            s = np.array([sum(cj[n] >= cj[j] for n in IG.neighbors(node)) for j in PG.neighbors(node)])
+            jp = np.array([risk_perception(k, si, np.random.random(), tau) for si in s])
+            cjs = np.array([cj[j] for j in PG.neighbors(node)])
+            j_values[node] = max(np.append(0, np.minimum(cjs, jp)))
     return max(j_values.values())

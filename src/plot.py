@@ -115,19 +115,19 @@ def plot_critical_t(results: dict, file: str, prediction: bool = True) -> None:
     plt.show()
 
 
-def plot_q_value(critics: dict, file: str) -> None:
+def plot_q_value(results: dict, file: str) -> None:
     """
     Plot the value of the Information Graph
-    :param critics:
+    :param results:
     :param file:
     :return:
     """
     fig, ax = plt.subplots()
     ax.set(xlabel='τ', ylabel='q', title='Phase Diagram')
 
-    x = np.array(critics[t_test])
-    y = np.array(critics[q_test])
-    z = np.array(critics[j_pred])
+    x = np.array(results[t_test])
+    y = np.array(results[q_test])
+    z = np.array(results[j_pred])
 
     xi, yi = np.mgrid[x.min():x.max():500j, y.min():y.max():500j]
 

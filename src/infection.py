@@ -4,7 +4,7 @@ import networkx as nx
 import numpy as np
 import random as rd
 
-from src.config import zero_threshold
+from src.config import eps
 from src.utils import *
 
 
@@ -18,9 +18,10 @@ def get_critical_j(k: int, t: float) -> float:
     :param t: bare infection probability
     :return: return the critical J value
     """
-    t = t if t > 0 else zero_threshold
-    k = k if k > 0 else zero_threshold
-    return k * np.log(k * t)
+    t = max(t, eps)
+    k = max(k, eps)
+    jc = k * np.log(k * t)
+    return max(jc, 0)
 
 
 def risk_perception(k: int, si: int, r: float, tau: float) -> float:
@@ -35,9 +36,10 @@ def risk_perception(k: int, si: int, r: float, tau: float) -> float:
     :param tau: infection probability
     :return: risk perception
     """
-    tau = tau if tau > 0 else zero_threshold
-    si = si if si > 0 else zero_threshold
-    return -(k / si) * np.log(r / tau)
+    tau = max(tau, eps)
+    si = max(si, eps)
+    jc = -(k / si) * np.log(r / tau)
+    return max(jc, 0)
 
 
 def infected_prob(s: int, k: int, t: float, J: float) -> float:
@@ -52,10 +54,11 @@ def infected_prob(s: int, k: int, t: float, J: float) -> float:
     :param J: perception risk
     :return: return the probability of being infected
     """
-    t = t if t > 0 else zero_threshold
-    J = J if J > 0 else zero_threshold
-    k = k if k > 0 else zero_threshold
-    return t * np.exp(-J * s / k)
+    t = max(t, eps)
+    J = max(J, eps)
+    k = max(k, eps)
+    u = t * np.exp(-J * s / k)
+    return max(u, 0)
 
 
 def prob_being_infected(s: int, k: int, tau: float, J: float) -> float:
