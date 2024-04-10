@@ -1,0 +1,47 @@
+\section{Analisi del Modello}\label{sec:analisi-del-modello}
+In questa sezione, viene riportato il metodo per generare reti multiplex.
+Prima, descriviamo i meccanismi per generare reti regolari, casuali e scale-free.
+
+Denotiamo con $a_{ij} = 0,1$ la matrice di adiacenza della rete, $a_{ij} = 1$ se c'è un collegamento da
+$j$a $i$ e $a_{ij} = 0$ altrimenti.
+Denotiamo con $k_i = \sum a_{ij}$ la connettività del sito $i$ e con $j(i)_1, j(i)_2, \dots, j(i)_{k_i}$
+quella dei suoi vicini ($a_{i,j(i)_n} =1$). Consideriamo solo reti simmetriche.
+Generiamo reti con $N$ nodi e $2mN$ collegamenti, in modo che la connettività media di ciascun nodo sia $k =2m$.
+
+(i) Regolare unidimensionale: I nodi sono disposti in un anello (condizione al contorno periodica).
+Ogni nodo dato stabilisce un collegamento con i $m$ nodi più vicini alla sua destra.
+
+(ii) Casuale: Ogni nodo stabilisce $m$ collegamenti con nodi scelti casualmente, evitando auto-loop e collegamenti
+multipli.
+La distribuzione di probabilità delle reti casuali è Poissoniana, $P(k) = \frac{z^k e^{-z}}{k!}$ dove $z = k$.
+
+(iii) Scale-free: Utilizziamo un modello configurazionale fissando anche un cutoff $K$.
+
+Prima, a ciascun nodo $i$ viene assegnata una connettività $k_i$ estratta da una distribuzione di legge di potenza
+$P(k) = A k^{-\gamma}$, $m \leq k \leq K$ con $A=(\gamma -1)/(m^{1-\gamma} -K^{1-\gamma})$.
+Poi i collegamenti sono connessi a caso, evitando auto-loop e collegamenti multipli, e infine,
+il numero totale di collegamenti viene potato per regolare il numero totale di collegamenti.
+Questo meccanismo ci permette di generare reti scale-free con un dato esponente $\gamma$.
+
+Siamo interessati a reti multiplex composte da due strati che denotiamo fisico e informazione.
+Prima, generiamo la rete fisica scegliendo una tra le reti regolari, casuali o scale-free.
+Poi generiamo una rete virtuale scelta anche tra le tre reti di riferimento, con la stessa connettività media $k =2m$.
+Per costruire la rete di informazione, per ogni nodo aggiungiamo collegamenti in uscita dalla rete fisica con
+probabilità $1-q$ e collegamenti dalla rete virtuale con probabilità $q$.
+Poiché questo processo viene ripetuto indipendentemente per ogni nodo, la rete di informazione risultante non è più
+simmetrica (un dato collegamento può essere scelto da uno dei suoi vertici ma non dall'altro).
+La quantità $Nqk$ corrisponde alla differenza tra la rete di informazione e la rete fisica.
+
+Questa procedura ci permette di studiare gli effetti della differenza tra la rete fisica, dove si verifica la
+diffusione dell'epidemia, e quella di informazione, dove gli attori diventano consapevoli della malattia,
+cioè su cui valutano la percezione del rischio di essere infettati.
+
+\subsection{Mean-field approximation}\label{subsec:mean-field-approximation}
+
+\subsection{Self-organized percolation}\label{subsec:self-organized-percolation}
+
+\subsubsection{Directed percolation}\label{subsubsec:directed-percolation}
+
+\subsubsection{Infezione con la percezione del rischio}\label{subsubsec:infezione-con-la-percezione-del-rischio}
+
+\subsubsection{Multiplex networks}\label{subsubsec:multiplex-networks}
