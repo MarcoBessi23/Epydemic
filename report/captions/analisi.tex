@@ -41,11 +41,21 @@ diffusione dell'epidemia e quella di informazione, dove gli attori diventano con
 cioè su cui valutano la percezione del rischio di essere infettati.
 
 \subsection{Mean-field approximation}\label{subsec:mean-field-approximation}
-
+In questa sezione abbiamo ricavato tramite simulazioni i valori critici del richio percepito $J$
+al variare della bare infection probability $\tau$. Confrontandoli con i valori ottenuti dalla teoria nel caso
+in cui il grado di ogni nodo è fissato a  un valore $k$, tramite la funzione $J_{c}=k\ln(k\tau)$.
+Come possiamo osservare la funzione approssima bene l'andamento delle simulazioni e non esiste un tau per cui 
+sia impossibile arrestare l'epidemia. 
 \subsection{Self-organized percolation}\label{subsec:self-organized-percolation}
+Ci siamo poi interessati a studiare la diffusione dell'epidemia su grafi tramite modelli basati 
+sulla percolazione, confrontando anche in questo caso i valori teorici con quelli ottenuti dalle simulazioni.
 
 \subsubsection{Directed percolation}\label{subsubsec:directed-percolation}
-
+Per cominciare abbiamo considerato grafi in cui i nodi non hanno percezione del rischio, l'unica determinante 
+dell'infezione in questo scenario è la bare infection probability $tau$. Ogni nodo ha un proprio valore di $\tau$
+ed è possibile dimostrare che il valore ottimale per il nodo $i$ al tempo $t+1$ è dato da [INSERISCI FORMULA].
+Questa successione viene iterata fino al tempo finito $T$ in cui si prende [INSERISCI FORMULA], che 
+rappresenta la soglia di percolazione, oltre questo valore non ci sono più siti infetti nel reticolo.
 \subsubsection{Infezione con la percezione del rischio}\label{subsubsec:infezione-con-la-percezione-del-rischio}
 
 \subsubsection{Multiplex networks}\label{subsubsec:multiplex-networks}
