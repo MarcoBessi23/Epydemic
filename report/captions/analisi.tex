@@ -1,6 +1,6 @@
 \section{Analisi del Modello}\label{sec:analisi-del-modello}
 In questa sezione, viene riportato il metodo per generare reti multiplex.
-Prima, descriviamo i meccanismi per generare reti regolari, casuali e scale-free.
+Per prima cosa descriviamo i meccanismi per generare reti regolari, casuali e scale-free.
 
 Denotiamo con $a_{ij} = 0,1$ la matrice di adiacenza della rete, $a_{ij} = 1$ se c'è un collegamento da
 $j$a $i$ e $a_{ij} = 0$ altrimenti.
@@ -15,25 +15,29 @@ Ogni nodo dato stabilisce un collegamento con i $m$ nodi più vicini alla sua de
 multipli.
 La distribuzione di probabilità delle reti casuali è Poissoniana, $P(k) = \frac{z^k e^{-z}}{k!}$ dove $z = k$.
 
-(iii) Scale-free: Utilizziamo un modello configurazionale fissando anche un cutoff $K$.
+(iii) Scale-free: Utilizziamo un modello fissando anche un cutoff $K$.
 
 Prima, a ciascun nodo $i$ viene assegnata una connettività $k_i$ estratta da una distribuzione di legge di potenza
 $P(k) = A k^{-\gamma}$, $m \leq k \leq K$ con $A=(\gamma -1)/(m^{1-\gamma} -K^{1-\gamma})$.
-Poi i collegamenti sono connessi a caso, evitando auto-loop e collegamenti multipli, e infine,
-il numero totale di collegamenti viene potato per regolare il numero totale di collegamenti.
+I rimanenti archi sono aggiunti in modo casuale, evitando auto-loop e connessioni multiple, e infine,
+il numero totale di archi viene potato per ottenere il grado medio desiderato.
 Questo meccanismo ci permette di generare reti scale-free con un dato esponente $\gamma$.
 
-Siamo interessati a reti multiplex composte da due strati che denotiamo fisico e informazione.
-Prima, generiamo la rete fisica scegliendo una tra le reti regolari, casuali o scale-free.
-Poi generiamo una rete virtuale scelta anche tra le tre reti di riferimento, con la stessa connettività media $k =2m$.
-Per costruire la rete di informazione, per ogni nodo aggiungiamo collegamenti in uscita dalla rete fisica con
-probabilità $1-q$ e collegamenti dalla rete virtuale con probabilità $q$.
+Siamo interessati a reti multiplex,ottenute dalla combinazione di uno strato fisico e uno strato virtuale.
+Per cominciare generiamo le due reti scegliendo tra (i),(ii) e (iii). 
+La rete di informazione viene costruita come segue:
+
+(i) Per ogni nodo $i$ della rete fisica considera il suo vicinato $\mathcal{N}(i)$, per ogni $j\in \mathcal{N}(i)$
+aggiungi un arco con direzione da $i$ verso $j$ con probabilità $1-q$.
+
+(ii) Esegui la stessa procedura con la rete virtuale ma con probabilità $q$.
+
 Poiché questo processo viene ripetuto indipendentemente per ogni nodo, la rete di informazione risultante non è più
 simmetrica (un dato collegamento può essere scelto da uno dei suoi vertici ma non dall'altro).
 La quantità $Nqk$ corrisponde alla differenza tra la rete di informazione e la rete fisica.
 
 Questa procedura ci permette di studiare gli effetti della differenza tra la rete fisica, dove si verifica la
-diffusione dell'epidemia, e quella di informazione, dove gli attori diventano consapevoli della malattia,
+diffusione dell'epidemia e quella di informazione, dove gli attori diventano consapevoli della malattia,
 cioè su cui valutano la percezione del rischio di essere infettati.
 
 \subsection{Mean-field approximation}\label{subsec:mean-field-approximation}
