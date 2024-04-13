@@ -152,7 +152,8 @@ def update_risk(G: nx.Graph, J: float, t: float) -> None:
     for node in G.nodes:
         k = G.degree(node)
         s = get_infected_neighbors(G, node)
-        G.nodes[node][risk] = infected_prob(s, k, t, J)
+        G.nodes[node][risk] = prob_being_infected(s,k,t,J)
+        #G.nodes[node][risk] = infected_prob(s, k, t, J)
 
 
 def new_infected(G: nx.Graph) -> None:
