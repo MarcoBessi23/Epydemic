@@ -45,11 +45,14 @@ diffusione e quella di informazione, dove gli attori diventano consapevoli della
 cioè su cui valutano il rischio di essere infettati.
 
 \subsection{Mean-field approximation}\label{subsec:mean-field-approximation}
-In questa sezione abbiamo ricavato tramite simulazioni i valori critici del richio percepito $J$
-al variare della bare infection probability $\tau$. Confrontandoli con i valori ottenuti dalla teoria nel caso
-in cui il grado di ogni nodo sia fissato a  un valore $k$, tramite la funzione $J_{c}=k\ln(k\tau)$.
-Come possiamo osservare nel seguito la funzione approssima bene l'andamento delle simulazioni e non esiste un tau per cui 
-sia impossibile arrestare l'epidemia. 
+In questa sezione abbiamo usato la seguente formula di aggiornamento della percentale $c$ di infetti sul grafo basata
+sui metodi di approsimazioni di campo medio $c(t+1)=\sum_{s=0}^{k}\binom{k}{s}c^{s}(1-c)^{k-s}s\tau\exp(-J\frac{s}{k})$.
+a questo punto fissato un certo valore di $\tau$, abbiamo preso il minimo livello di precauzione $J$ tale per cui $c$ dopo un 
+certo numero di passi diventa nullo, ovvero tale da azzerare il numero di infetti. 
+Nella teoria il valore critico di $J$ viene fornito dalla seguent funzione $J_{c}=k\ln(k\tau)$, ricavata 
+considerando lo stato stazionario $c(t+1)=c(t)$ con $c\to0$ ed eseguendo alcune manipolazioni algebriche.
+Come possiamo osservare nel seguito i valori predetti dalla teoria combaciano con quelli restituiti simulando 
+il processo infettivo.
 \subsection{Self-organized percolation}\label{subsec:self-organized-percolation}
 Ci siamo poi interessati a studiare la diffusione dell'epidemia su grafi tramite modelli basati 
 sulla percolazione, confrontando anche in questo caso i valori teorici con quelli ottenuti dalle simulazioni.
@@ -57,12 +60,12 @@ sulla percolazione, confrontando anche in questo caso i valori teorici con quell
 \subsubsection{Directed percolation}\label{subsubsec:directed-percolation}
 Per cominciare abbiamo considerato grafi in cui i nodi non hanno percezione del rischio, l'unica determinante 
 dell'infezione in questo scenario è la bare infection probability $tau$. Ogni nodo ha un proprio valore di $\tau$
-ed è possibile dimostrare che il valore ottimale per il nodo $i$ al tempo $t+1$ è dato da $\tau_{i}(t+1) = \min_{j= j_{1},..j_{k_{i}}}\max(r_{ij}(t), \tau_{i}(t))$
+ed è possibile dimostrare che il $\tau$ ottimale per il nodo $i$ al tempo $t+1$ è dato da $\tau_{i}(t+1) = \min_{j= j^{(i)}_{1},..j^{(i)}_{k_{i}}}\max(r_{ij}(t), \tau_{i}(t))$
 con $k_{i}$ grado del nodo $i$ e $j$ indice dei vicini.
 Dato un certo tempo sufficientemente grande ma finito $T$, il valore  $\min_{i=1,..,n}\tau_{i}(T)$ 
 rappresenta la soglia di percolazione al di sopra della quale c'è almeno un sito infetto nel reticolo.
-Come possiamo vedere i valori predetti dalla formula sono molto vicini a quelli che si osservano simulando 
-l'infezione.
+Anche in questo caso siamo riusciti ad ottenere che i valori predetti dalla formula sono molto vicini a 
+quelli che si osservano simulando l'infezione.
 \subsubsection{Infezione con la percezione del rischio}\label{subsubsec:infezione-con-la-percezione-del-rischio}
 In seguito abbiamo reso il problema più complesso, assumendo che i nodi della rete siano dotati di 
 un valore $J$ che indica la percezione del rischio di infezione, anche in questo scenario è possibile 
