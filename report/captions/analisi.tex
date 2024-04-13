@@ -1,44 +1,48 @@
 \section{Analisi del Modello}\label{sec:analisi-del-modello}
-In questa sezione, viene riportato il metodo per generare reti multiplex.
+
 Per prima cosa descriviamo i meccanismi per generare reti regolari, casuali e scale-free.
+Denotiamo con $A$ la matrice di adiacenza della rete dove $a_{ij} = 1$ se c'è un arco da
+$j$ a $i$ e $a_{ij} = 0$ altrimenti.
+Denotiamo con $k_i = \sum a_{ij}$ la connettività del sito $i$ e 
+con $j^{(i)}_{1}\cdots j^{(i)}_{k_{i}}$ i suoi vicini $\left\{ j : a_{ij}=1 \right\}$. 
+Consideriamo solo reti simmetriche con $N$ nodi e $2mN$ collegamenti, in modo che la connettività media 
+$\left\langle k \right\rangle$ di ciascun nodo sia pari a $2m$.
 
-Denotiamo con $a_{ij} = 0,1$ la matrice di adiacenza della rete, $a_{ij} = 1$ se c'è un collegamento da
-$j$a $i$ e $a_{ij} = 0$ altrimenti.
-Denotiamo con $k_i = \sum a_{ij}$ la connettività del sito $i$ e con $j(i)_1, j(i)_2, \dots, j(i)_{k_i}$
-quella dei suoi vicini ($a_{i,j(i)_n} =1$). Consideriamo solo reti simmetriche.
-Generiamo reti con $N$ nodi e $2mN$ collegamenti, in modo che la connettività media di ciascun nodo sia $k =2m$.
-
-(i) Regolare unidimensionale: I nodi sono disposti in un anello (condizione al contorno periodica).
-Ogni nodo dato stabilisce un collegamento con i $m$ nodi più vicini alla sua destra.
+(i) Regolare unidimensionale: I nodi sono disposti ad anello.
+Ogni dato nodo stabilisce un collegamento con gli $m$ nodi più vicini alla sua destra.
 
 (ii) Casuale: Ogni nodo stabilisce $m$ collegamenti con nodi scelti casualmente, evitando auto-loop e collegamenti
 multipli.
-La distribuzione di probabilità delle reti casuali è Poissoniana, $P(k) = \frac{z^k e^{-z}}{k!}$ dove $z = k$.
+La distribuzione di probabilità delle reti casuali è quella di Poisson, $P(k) = \frac{z^k e^{-z}}{k!}$ 
+dove $z =\left\langle k \right\rangle$.
 
 (iii) Scale-free: Utilizziamo un modello fissando anche un cutoff $K$.
 
-Prima, a ciascun nodo $i$ viene assegnata una connettività $k_i$ estratta da una distribuzione di legge di potenza
-$P(k) = A k^{-\gamma}$, $m \leq k \leq K$ con $A=(\gamma -1)/(m^{1-\gamma} -K^{1-\gamma})$.
-I rimanenti archi sono aggiunti in modo casuale, evitando auto-loop e connessioni multiple, e infine,
-il numero totale di archi viene potato per ottenere il grado medio desiderato.
+Prima, a ciascun nodo $i$ viene assegnata una connettività $k_i$ estratta da una distribuzione 
+di legge di potenza $P(k) = A k^{-\gamma}$, $m \leq k \leq K$ con $A=(\gamma -1)/(m^{1-\gamma} -K^{1-\gamma})$.
+I rimanenti archi sono aggiunti in modo casuale, evitando auto-loop e connessioni multiple, infine
+il numero totale di archi viene "potato" per ottenere il grado medio desiderato.
 Questo meccanismo ci permette di generare reti scale-free con un dato esponente $\gamma$.
 
 Siamo interessati a reti multiplex,ottenute dalla combinazione di uno strato fisico e uno strato virtuale.
 Per cominciare generiamo le due reti scegliendo tra (i),(ii) e (iii). 
-La rete di informazione viene costruita come segue:
+La rete di informazione viene poi costruita come segue:
 
 (i) Per ogni nodo $i$ della rete fisica considera il suo vicinato $\mathcal{N}(i)$, per ogni $j\in \mathcal{N}(i)$
 aggiungi un arco con direzione da $i$ verso $j$ con probabilità $1-q$.
 
 (ii) Esegui la stessa procedura con la rete virtuale ma con probabilità $q$.
 
-Poiché questo processo viene ripetuto indipendentemente per ogni nodo, la rete di informazione risultante non è più
-simmetrica (un dato collegamento può essere scelto da uno dei suoi vertici ma non dall'altro).
+Poiché questo processo viene ripetuto indipendentemente per ogni nodo, la rete di informazione risultante 
+non è più simmetrica (un dato collegamento può essere scelto da uno dei suoi vertici ma non dall'altro). 
+Il valore $q$ rappresenta il peso che viene attribuito alla rete virtuale, più $q$ è vicino a $1$ e più la 
+rete delle informazioni somiglia a quella virtuale. Nella pratica questo parametro regola quanta 
+importanza gli individui danno alle loro relazioni virtuali.
 La quantità $Nqk$ corrisponde alla differenza tra la rete di informazione e la rete fisica.
 
-Questa procedura ci permette di studiare gli effetti della differenza tra la rete fisica, dove si verifica la
-diffusione dell'epidemia e quella di informazione, dove gli attori diventano consapevoli della malattia,
-cioè su cui valutano la percezione del rischio di essere infettati.
+Questa procedura ci permette di studiare gli effetti su un epidemia della differenza tra la rete fisica, dove si verifica la
+diffusione e quella di informazione, dove gli attori diventano consapevoli della malattia,
+cioè su cui valutano il rischio di essere infettati.
 
 \subsection{Mean-field approximation}\label{subsec:mean-field-approximation}
 In questa sezione abbiamo ricavato tramite simulazioni i valori critici del richio percepito $J$
@@ -53,26 +57,28 @@ sulla percolazione, confrontando anche in questo caso i valori teorici con quell
 \subsubsection{Directed percolation}\label{subsubsec:directed-percolation}
 Per cominciare abbiamo considerato grafi in cui i nodi non hanno percezione del rischio, l'unica determinante 
 dell'infezione in questo scenario è la bare infection probability $tau$. Ogni nodo ha un proprio valore di $\tau$
-ed è possibile dimostrare che il valore ottimale per il nodo $i$ al tempo $t+1$ è dato da [INSERISCI FORMULA].
-Questa successione viene iterata fino al tempo finito $T$ in cui si prende [INSERISCI FORMULA], che 
-rappresenta la soglia di percolazione, oltre questo valore non ci sono più siti infetti nel reticolo.
+ed è possibile dimostrare che il valore ottimale per il nodo $i$ al tempo $t+1$ è dato da $\tau_{i}(t+1) = \min_{j= j_{1},..j_{k_{i}}}\max(r_{ij}(t), \tau_{i}(t))$
+con $k_{i}$ grado del nodo $i$ e $j$ indice dei vicini.
+Dato un certo tempo sufficientemente grande ma finito $T$, il valore  $\min_{i=1,..,n}\tau_{i}(T)$ 
+rappresenta la soglia di percolazione al di sopra della quale c'è almeno un sito infetto nel reticolo.
 Come possiamo vedere i valori predetti dalla formula sono molto vicini a quelli che si osservano simulando 
 l'infezione.
 \subsubsection{Infezione con la percezione del rischio}\label{subsubsec:infezione-con-la-percezione-del-rischio}
 In seguito abbiamo reso il problema più complesso, assumendo che i nodi della rete siano dotati di 
 un valore $J$ che indica la percezione del rischio di infezione, anche in questo scenario è possibile 
-ricavare una successione di valori ottimali di $J$ per ogni nodo e in modo simile a quanto fatto in precedenza
-prendere [INSERISCI FORMULA] come valore critico.
-in questo caso è interessante notare come al crescere di $tau$ oltre la soglia critica ci sia sempre un 
-$J$ per cui è possibile prevenire la diffusione dell'epidemia.
+ricavare una successione di valori ottimali di $J$ come segue $J_{i}(t+1)=\max_{j^{(i)}_{1},...,j^{(i)}_{k_{i}}}min(J_{j}(t),\frac{-k_{i}}{s_{i}(J_{j}(t))}\ln(\frac{r_{ij}(t)}{\tau}))$ 
+e in modo simile a quanto fatto in precedenza prendere $\max_{i= 1,..,n}J_{i}(T)$ come valore critico.
+In questo caso è interessante notare come al crescere di $tau$ oltre la soglia critica ci sia sempre un 
+$J$ per cui è possibile arrestare la diffusione dell'epidemia.
 \subsubsection{Multiplex networks}\label{subsubsec:multiplex-networks}
 Per finire abbiamo affrontato il problema della percolazione in un network fisico come sopra dove però la 
 percezione del rischio dipende dalla topologia della rete di informazione e in particolare dal numero di
 infetti su quest'ultima.
-La formula che si ricava è molto simile a quella precedente con l'eccezione del termine [INSERISCI TERMINE]
-che indica il numero di vicini infetti del nodo $i$. Quello che ci si aspetta è che al crescere del valore di q
+La formula che si ricava è molto simile a quella precedente, $J_{i}(t+1)=\max_{j^{(i)}_{1},...,j^{(i)}_{k_{i}}}min(J_{j}(t),\frac{-k_{i}}{\overline{s}_{i}(J_{j}(t))}\ln(\frac{r_{ij}(t)}{\tau}))$ 
+l'unica differenza è nel termine $\overline{s}_{i}$ che rappresenta il numero di vicini infetti percepito
+dal nodo $i$ e viene calcolato sul grafo informativo. Quello che ci si aspetta è che al crescere del valore di q
 la rete informativa si avvicini sempre più a quella virtuale, questo può influenzare molto la percezione 
-del rischio per un dato nodo che concentra la sua attenzione su nodi che non gli sono vicini fisici, 
+del rischio per un dato nodo che concentra la sua attenzione su nodi che non gli sono vicini realmente, 
 sottovalutando il reale livello di rischio del mondo fisico. Quello che si osserva dai diagrammi di fase è
 proprio che fissato un certo valore $\tau$ sufficientemente alto c'è sempre una soglia critica di $q$ 
 oltre la quale diventa praticamente impossibile fermare l'epidemia.
