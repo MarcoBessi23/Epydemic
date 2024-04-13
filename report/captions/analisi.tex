@@ -56,6 +56,23 @@ dell'infezione in questo scenario è la bare infection probability $tau$. Ogni n
 ed è possibile dimostrare che il valore ottimale per il nodo $i$ al tempo $t+1$ è dato da [INSERISCI FORMULA].
 Questa successione viene iterata fino al tempo finito $T$ in cui si prende [INSERISCI FORMULA], che 
 rappresenta la soglia di percolazione, oltre questo valore non ci sono più siti infetti nel reticolo.
+Come possiamo vedere i valori predetti dalla formula sono molto vicini a quelli che si osservano simulando 
+l'infezione.
 \subsubsection{Infezione con la percezione del rischio}\label{subsubsec:infezione-con-la-percezione-del-rischio}
-
+In seguito abbiamo reso il problema più complesso, assumendo che i nodi della rete siano dotati di 
+un valore $J$ che indica la percezione del rischio di infezione, anche in questo scenario è possibile 
+ricavare una successione di valori ottimali di $J$ per ogni nodo e in modo simile a quanto fatto in precedenza
+prendere [INSERISCI FORMULA] come valore critico.
+in questo caso è interessante notare come al crescere di $tau$ oltre la soglia critica ci sia sempre un 
+$J$ per cui è possibile prevenire la diffusione dell'epidemia.
 \subsubsection{Multiplex networks}\label{subsubsec:multiplex-networks}
+Per finire abbiamo affrontato il problema della percolazione in un network fisico come sopra dove però la 
+percezione del rischio dipende dalla topologia della rete di informazione e in particolare dal numero di
+infetti su quest'ultima.
+La formula che si ricava è molto simile a quella precedente con l'eccezione del termine [INSERISCI TERMINE]
+che indica il numero di vicini infetti del nodo $i$. Quello che ci si aspetta è che al crescere del valore di q
+la rete informativa si avvicini sempre più a quella virtuale, questo può influenzare molto la percezione 
+del rischio per un dato nodo che concentra la sua attenzione su nodi che non gli sono vicini fisici, 
+sottovalutando il reale livello di rischio del mondo fisico. Quello che si osserva dai diagrammi di fase è
+proprio che fissato un certo valore $\tau$ sufficientemente alto c'è sempre una soglia critica di $q$ 
+oltre la quale diventa praticamente impossibile fermare l'epidemia.
