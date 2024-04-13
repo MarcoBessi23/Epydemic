@@ -140,8 +140,8 @@ def critic_j_percolation(G: nx.Graph, tau: float, T: int) -> float:
     """
 
     # Initialize J values for each node
-    # j_values = {node: float('inf') for node in G.nodes()}
-    j_values = {node: np.random.uniform(max_j, max_j+1) for node in G.nodes()}
+    j_values = {node: float('inf') for node in G.nodes()}
+    # j_values = {node: np.random.uniform(maxj, max_j+1) for node in G.nodes()}
 
     for _ in range(T):
         cj = j_values.copy()

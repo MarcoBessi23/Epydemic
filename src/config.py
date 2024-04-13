@@ -3,17 +3,17 @@ from src.utils import *
 
 # Values for the tests
 step = 0.1  # Step for the values
-max_j = 1e8
+max_j = 100
 js = np.arange(0, max_j, step)  # Risk perception
 ts = np.arange(0, 1+step, step)  # Tau values
 qs = np.arange(0, 1+step, step)  # Connection probability for Information Graph
 
-iterations = 10000  # Iteration
+iterations = 1000  # Iteration
 zero_threshold = 1e-4  # Zero threshold
 eps = 1e-4  # Epsilon
 
 # Values for the graph
-n_nodes = 100  # Number of nodes
+n_nodes = 100 # Number of nodes
 k = 6  # Number of edges to attach from a new node
 prob_k = k / n_nodes  # Probability for random graph
 

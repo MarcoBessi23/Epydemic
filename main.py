@@ -96,13 +96,18 @@ def percolation_test():
 
     PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
     # TODO The percolation jc test and multiplex percolation is not working
-    graph_type = "Poisson <k>=" + str(k)
-    print(f"Graph type: {graph_type}")
-    # percolation_jc_test(PG, iterations, ts, js)
-    result = percolation_jc_test_3(PG, iterations, ts)
-    results[graph_type] = result
+    #graph_type = "Poisson <k>=" + str(k)
+    #print(f"Graph type: {graph_type}")
+    percolation_jc_test(PG, iterations, ts, js)
+    #result = percolation_jc_test_3(PG, iterations, ts)
+    #results[graph_type] = result
+#
+    #plot_critical_j(results, file=approx_plot_jc_plot, prediction=False)
 
-    plot_critical_j(results, file=approx_plot_jc_plot, prediction=False)
+def percolazione_J():
+    PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
+    #percolation_jc_test2(PG, iterations, ts, js)
+    test_di_percolazione(PG,iterations,ts)
 
 
 def multiplex_percolation_test():
@@ -123,7 +128,8 @@ def main():
     # mean_field_test()
     # simple_percolation_test()
     # percolation_test()
-    multiplex_percolation_test()
+    percolazione_J()
+    # multiplex_percolation_test()
 
 
 if __name__ == "__main__":

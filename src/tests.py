@@ -3,9 +3,9 @@ import networkx as nx
 
 from src.config import zero_threshold
 from src.graphs import get_information_graph
-from src.infection import get_critical_j
+from src.infection import get_critical_j, get_average_graph_degree
 from src.mean_field import simulated_mean_field_infection
-from src.plot import plot_critical_j, plot_q_value
+from src.plot import plot_critical_j, plot_q_value, plot_critical_j2
 from src.percolation import (critic_j_percolation, tau_simple_percolation, multiplex_percolation,
                              simulated_j_percolation, simulated_simple_percolation, critic_j_percolation,
                              multiplex_percolation)
@@ -78,6 +78,23 @@ def simple_tau_percolation_test(G: nx.Graph,
 
 # ______________________________________________________________________________________________________________________
 # Infection with risk percolation
+def test_di_percolazione(G: nx.graph,
+                         T:int,
+                         ts:np.array) -> None:
+
+    results = {t_test: [], j_test: [], j_pred: []}
+    k = get_average_graph_degree(G)
+    for t in reversed(ts):
+        jc_pred = critic_j_percolation(G, t, T)
+        j = get_critical_j(k,t)
+        results[t_test].append(t)
+        results[j_test].append(j)
+        results[j_pred].append(jc_pred)
+    plot_critical_j2(results, file=graficoJC)
+
+
+
+
 
 
 def percolation_jc_test(G: nx.Graph,
@@ -109,8 +126,7 @@ def percolation_jc_test(G: nx.Graph,
                 results[j_pred].append(jc_pred)
                 break
         print("--------------------------------------------------", end="\n\n")
-    plot_critical_j(results, file=approx_plot_jc_plot)
-
+    plot_critical_j2(results, file=approx_plot_jc_plot)
 
 def percolation_jc_test_2(G: nx.Graph,
                           T: int,

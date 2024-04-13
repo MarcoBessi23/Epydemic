@@ -87,7 +87,25 @@ def plot_critical_j(results: dict, file: str, prediction: bool = True) -> None:
     plt.savefig(path_plots + file)
     plt.show()
 
+def plot_critical_j2(results: dict, file: str, prediction: bool = True) -> None:
+    """
+    Plot the critical J values
 
+    :param results: dict of critical values
+    :param file: file name
+    :param prediction: if the prediction should be plotted
+    """
+
+    plt.title("Percolation Jc and simulated Jc" + str(n_nodes))
+
+    plt.plot(results[t_test], results[j_test], label="simulation", color=blue, marker=".", linestyle="--")
+    if prediction:
+        plt.plot(results[t_test], results[j_pred], label="Theory: ", color=black, marker="", linestyle="--")
+    plt.xlabel("τ")
+    plt.ylabel("Jc")
+    plt.legend()
+    plt.savefig(path_plots + file)
+    plt.show()
 # ______________________________________________________________________________________________________________________
 # Plotting Percolation for c and tau values
 
