@@ -31,41 +31,51 @@ def test_graphs():
     plot_all_graphs(PG, VG, IG)
 
 
-# TODO Test with different values of k and different number of nodes and initial infected
+# TODO Test with different values of initial infected
 def mean_field_test():
+    test = "MF/"
     results = {}
 
     # RANDOM GRAPH WITH K = 6
     kk = 6
     graph_type = "<k>=" + str(kk)
     result = mean_field_jc_test(kk, perc_init_infect, iterations, ts, js)
+    save_results(result, file=test+graph_type+".csv")
     results[graph_type] = result
+    plot_critical_j({graph_type: result}, file=test+graph_type+".png")
 
     # RANDOM GRAPH WITH K = 4
     kk = 4
     graph_type = "<k>=" + str(kk)
     result = mean_field_jc_test(kk, perc_init_infect, iterations, ts, js)
+    save_results(result, file=test+graph_type+".csv")
     results[graph_type] = result
+    plot_critical_j({graph_type: result}, file=test+graph_type+".png")
 
     # RANDOM GRAPH WITH K = 2
     kk = 2
     graph_type = "<k>=" + str(kk)
     result = mean_field_jc_test(kk, perc_init_infect, iterations, ts, js)
+    save_results(result, file=test+graph_type+".csv")
     results[graph_type] = result
+    plot_critical_j({graph_type: result}, file=test+graph_type+".png")
 
     # PLOT ALL RESULTS
-    plot_critical_j(results, file=mean_field_jc_plot)
+    plot_critical_j(results, file=test+mean_field_jc_plot)
 
 
 # TODO Test with different values of k and different number of nodes and initial infected
 def simple_percolation_test():
+    test = "SIM/"
     results = {}
 
     # RANDOM GRAPH WITH K
     PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
     graph_type = "Poisson <k>=" + str(k)
     result = simple_tau_percolation_test(PG, iterations, ts)
+    save_results(result, file=test+graph_type+".csv")
     results[graph_type] = result
+    plot_critical_t({graph_type: result}, file=test+graph_type+".png")
 
     # RANDOM GRAPH WITH K*2
     kk = 2 * k
@@ -73,48 +83,82 @@ def simple_percolation_test():
     PG, VG = random_graph_test(n_nodes, pPG=prob_kk, pVG=prob_kk)
     graph_type = "Poisson <k>=" + str(kk)
     result = simple_tau_percolation_test(PG, iterations, ts)
+    save_results(result, file=test+graph_type+".csv")
     results[graph_type] = result
+    plot_critical_t({graph_type: result}, file=test+graph_type+".png")
 
     # CYCLE GRAPH
     PG, VG = cycle_graph_test(n_nodes)
     graph_type = "Cycle"
     result = simple_tau_percolation_test(PG, iterations, ts)
+    save_results(result, file=test+graph_type+".csv")
     results[graph_type] = result
+    plot_critical_t({graph_type: result}, file=test+graph_type+".png")
 
     # SCALE FREE GRAPH WITH K
     PG, VG = scale_free_graph_test(n_nodes, mPG=k, mVG=k)
     graph_type = "Scale Free <k>=" + str(k)
     result = simple_tau_percolation_test(PG, iterations, ts)
+    save_results(result, file=test+graph_type+".csv")
     results[graph_type] = result
+    plot_critical_t({graph_type: result}, file=test+graph_type+".png")
 
     # PLOT ALL RESULTS
-    plot_critical_t(results, file=critical_t_plot)
+    plot_critical_t(results, file=test+critical_t_plot)
 
 
 def percolation_test():
+    test = "PERC/"
     results = {}
 
+    # RANDOM GRAPH WITH K
     PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
-    # TODO The percolation jc test and multiplex percolation is not working
-    #graph_type = "Poisson <k>=" + str(k)
-    #print(f"Graph type: {graph_type}")
-    percolation_jc_test(PG, iterations, ts, js)
-    #result = percolation_jc_test_3(PG, iterations, ts)
-    #results[graph_type] = result
-#
-    #plot_critical_j(results, file=approx_plot_jc_plot, prediction=False)
+    graph_type = "Poisson <k>=" + str(k)
+    result = risk_percolation_j_test(PG, iterations, ts)
+    save_results(result, file=test+graph_type+".csv")
+    results[graph_type] = result
+    plot_percolation_critical_j({graph_type: result}, file=test+graph_type+".png")
 
-def percolazione_J():
-    PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
-    #percolation_jc_test2(PG, iterations, ts, js)
-    test_di_percolazione(PG,iterations,ts)
+    # CYCLE GRAPH
+    PG, VG = cycle_graph_test(n_nodes)
+    graph_type = "Cycle"
+    result = risk_percolation_j_test(PG, iterations, ts)
+    save_results(result, file=test+graph_type+".csv")
+    results[graph_type] = result
+    plot_percolation_critical_j({graph_type: result}, file=test+graph_type+".png")
+
+    # SCALE FREE GRAPH WITH K
+    PG, VG = scale_free_graph_test(n_nodes, mPG=k, mVG=k)
+    graph_type = "Scale Free <k>=" + str(k)
+    result = risk_percolation_j_test(PG, iterations, ts)
+    save_results(result, file=test+graph_type+".csv")
+    results[graph_type] = result
+    plot_percolation_critical_j({graph_type: result}, file=test+graph_type+".png")
+
+    # PLOT ALL RESULTS
+    plot_percolation_critical_j(results, file=test+graficoJC)
 
 
 def multiplex_percolation_test():
+    test = "MUL/"
+
     PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
-    results = multiplex_percolation_jc_test_2(PG, VG, iterations, ts, qs)
-    # save_results(results, file=approx_plot_jc_plot)
-    plot_q_value(results, file=q_plot)
+    graph_type = "Poisson <k>=" + str(k)
+    results = multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
+    save_results(results, file=test+graph_type+".csv")
+    plot_q_value(results, file=test+graph_type+".png")
+
+    PG, VG = cycle_graph_test(n_nodes)
+    graph_type = "Cycle"
+    results = multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
+    save_results(results, file=test+graph_type+".csv")
+    plot_q_value(results, file=test+graph_type+".png")
+
+    PG, VG = scale_free_graph_test(n_nodes, mPG=k, mVG=k)
+    graph_type = "Scale Free <k>=" + str(k)
+    results = multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
+    save_results(results, file=test+graph_type+".csv")
+    plot_q_value(results, file=test+graph_type+".png")
 
 
 def main():
@@ -128,8 +172,7 @@ def main():
     # mean_field_test()
     # simple_percolation_test()
     # percolation_test()
-    percolazione_J()
-    # multiplex_percolation_test()
+    multiplex_percolation_test()
 
 
 if __name__ == "__main__":

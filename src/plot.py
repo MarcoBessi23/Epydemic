@@ -65,6 +65,7 @@ def plot_update(G: nx.Graph, pos: dict) -> None:
 # ______________________________________________________________________________________________________________________
 # Plotting for Critical J and Tau For mean field and percolation
 
+
 def plot_critical_j(results: dict, file: str, prediction: bool = True) -> None:
     """
     Plot the critical J values
@@ -78,16 +79,22 @@ def plot_critical_j(results: dict, file: str, prediction: bool = True) -> None:
     plt.title("Infection model and mean-field approximation: N = " + str(n_nodes))
     for graph_type in results:
         color = colors.pop(0)
-        plt.plot(results[graph_type][t_test], results[graph_type][j_test], label=graph_type, color=color, marker=".", linestyle="--")
+        plt.plot(results[graph_type][t_test], results[graph_type][j_test],
+                 label=graph_type, color=color, marker="", linestyle="--", linewidth=3)
         if prediction:
-            plt.plot(results[graph_type][t_test], results[graph_type][j_pred], label="Theory: "+graph_type, color=black, marker="", linestyle="--")
+            plt.plot(results[graph_type][t_test], results[graph_type][j_pred],
+                     label="Theory: "+graph_type, color=black, marker="", linestyle="--", linewidth=1)
     plt.xlabel("τ")
     plt.ylabel("Jc")
     plt.legend()
     plt.savefig(path_plots + file)
     plt.show()
 
-def plot_critical_j2(results: dict, file: str, prediction: bool = True) -> None:
+# ______________________________________________________________________________________________________________________
+# Plotting Percolation for j values
+
+
+def plot_percolation_critical_j(results: dict, file: str, prediction: bool = True) -> None:
     """
     Plot the critical J values
 
@@ -95,17 +102,23 @@ def plot_critical_j2(results: dict, file: str, prediction: bool = True) -> None:
     :param file: file name
     :param prediction: if the prediction should be plotted
     """
+    colors = [blue, red, green, black]  # Add more colors if needed
 
     plt.title("Percolation Jc and simulated Jc" + str(n_nodes))
 
-    plt.plot(results[t_test], results[j_test], label="simulation", color=blue, marker=".", linestyle="--")
-    if prediction:
-        plt.plot(results[t_test], results[j_pred], label="Theory: ", color=black, marker="", linestyle="--")
+    for graph_type in results:
+        color = colors.pop(0)
+        plt.plot(results[graph_type][t_test], results[graph_type][j_test],
+                 label=graph_type, color=color, marker=".", linestyle="--")
+        if prediction:
+            plt.plot(results[graph_type][t_test], results[graph_type][j_pred],
+                     label="Theory: "+graph_type, color=black, marker="", linestyle="--")
     plt.xlabel("τ")
     plt.ylabel("Jc")
     plt.legend()
     plt.savefig(path_plots + file)
     plt.show()
+
 # ______________________________________________________________________________________________________________________
 # Plotting Percolation for c and tau values
 
@@ -125,7 +138,7 @@ def plot_critical_t(results: dict, file: str, prediction: bool = True) -> None:
         color = colors.pop(0)
         plt.plot(results[graph_type][t_test], results[graph_type][v_pred], label=graph_type, marker="", linestyle="-", color=color)
         if prediction:
-            plt.plot(results[graph_type][t_pred], 0, label="Theory τc", marker="s", linestyle=" ", color=color)
+            plt.plot(results[graph_type][t_pred][0], 0, label="Theory τc", marker="s", linestyle=" ", color=color)
     plt.xlabel("τ")
     plt.ylabel("c")
     plt.legend()

@@ -204,3 +204,106 @@ def multiplex_percolation(IG: nx.DiGraph, PG: nx.graph, tau: float, T: int) -> f
                 m.append(min(cj[j], jp))
             j_values[node] = max(m)  # Update J[i] with the maximum value calculated
     return max(j_values.values())
+
+
+def percolation_jc_test(G: nx.Graph,
+                        T: int,
+                        ts: np.array,
+                        js: np.array) -> None:
+    """
+    Get the critical J values test
+
+    :param G: graph
+    :param T: iteration
+    :param ts: values of tau
+    :param js: values of risk perception J
+    :return: return the critical J values
+    """
+
+    results = {t_test: [], j_test: [], j_pred: []}
+    for t in reversed(ts):
+        # Calculate the jc prediction about percolation
+        jc_pred = critic_j_percolation(G, t, T)
+        print(f"Percolation-Critical J prediction: {jc_pred}")
+        for j in js:
+            print(f"t: {round(t, 2)}, j: {round(j, 2)}")
+            # Simulate the infection with the percolation scenario
+            v = simulated_j_percolation(G, t, j, T)
+            if v <= zero_threshold:
+                results[t_test].append(t)
+                results[j_test].append(j)
+                results[j_pred].append(jc_pred)
+                break
+        print("--------------------------------------------------", end="\n\n")
+    plot_critical_j2(results, file=approx_plot_jc_plot)
+
+
+def percolation_jc_test_2(G: nx.Graph,
+                          T: int,
+                          ts: np.array) -> dict:
+    """
+    Get the critical J values test
+
+    :param G: graph
+    :param T: iteration
+    :param ts: values of tau
+    :return: return results of the test
+    """
+
+    results = {t_test: [], j_test: [], j_pred: []}
+    for t in reversed(ts):
+        # Calculate the jc prediction about percolation
+        jc_pred = critic_j_percolation(G, t, T)
+        print(f"Percolation-Critical J prediction: {round(jc_pred, 2)}")
+        # print(f"t: {round(t,2)}, j: {round(jc_pred,2)}")
+        js = np.arange(0, 200, 0.1)
+        for j in js:
+            print(f"t: {round(t, 2)}, j: {round(j, 2)}")
+            # Simulate the infection with the percolation scenario
+            v = simulated_j_percolation(G, t, j, T)
+            if v <= zero_threshold:
+                results[t_test].append(t)
+                results[j_test].append(j)
+                results[j_pred].append(jc_pred)
+                break
+    print("--------------------------------------------------", end="\n\n")
+    return results
+
+
+def percolation_jc_test_3(G: nx.Graph,
+                          T: int,
+                          ts: np.array) -> dict:
+    """
+    Get the critical J values test
+
+    :param G: graph
+    :param T: iteration
+    :param ts: values of tau
+    :return: return results of the test
+    """
+
+    results = {t_test: [], j_test: [], j_pred: []}
+    print(f"Percolation-Critical J prediction: ", end="")
+    for t in reversed(ts):
+        # Calculate the jc prediction about percolation
+        jc_pred = critic_j_percolation(G, t, T)
+        print(f"t: {round(t, 2)}, j: {round(jc_pred, 2)}")
+        results[t_test].append(t)
+        results[j_test].append(jc_pred)
+        results[j_pred].append(jc_pred)
+    print("--------------------------------------------------", end="\n\n")
+    return results
+
+
+def percolation_test():
+    results = {}
+
+    PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
+    # TODO The percolation jc test and multiplex percolation is not working
+    #graph_type = "Poisson <k>=" + str(k)
+    #print(f"Graph type: {graph_type}")
+    percolation_jc_test(PG, iterations, ts, js)
+    #result = percolation_jc_test_3(PG, iterations, ts)
+    #results[graph_type] = result
+#
+    #plot_critical_j(results, file=approx_plot_jc_plot, prediction=False)
