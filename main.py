@@ -66,7 +66,7 @@ def mean_field_test():
 
 # TODO Test with different values of k and different number of nodes and initial infected
 def simple_percolation_test():
-    test = "SIM/"
+    test = "SIM/"+str(n_nodes)+"/"
     results = {}
 
     # RANDOM GRAPH WITH K
@@ -108,7 +108,7 @@ def simple_percolation_test():
 
 
 def percolation_test():
-    test = "PERC/"
+    test = "PERC/"+str(n_nodes)+"/"
     results = {}
 
     # RANDOM GRAPH WITH K
@@ -140,7 +140,7 @@ def percolation_test():
 
 
 def multiplex_percolation_test():
-    test = "MUL/"
+    test = "MUL/"+str(n_nodes)+"/"
 
     PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
     graph_type = "Poisson <k>=" + str(k)
@@ -169,9 +169,9 @@ def main():
     # test_graphs()
 
     # TESTS
-    # mean_field_test()
-    # simple_percolation_test()
-    # percolation_test()
+    mean_field_test()
+    simple_percolation_test()
+    percolation_test()
     multiplex_percolation_test()
 
 
