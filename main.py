@@ -115,7 +115,7 @@ def simple_percolation_test():
 
 
 def percolation_test():
-    test = "PERC/"+str(n_nodes)+"/"
+    test = "PERC/Nodes_"+str(n_nodes)+"/Iteration_"+str(iterations)+"/"
     results = {}
 
     # RANDOM GRAPH WITH K
@@ -150,7 +150,7 @@ def percolation_test():
 
 
 def multiplex_percolation_test():
-    test = "MUL/"+str(n_nodes)+"/"
+    test = "MUL/Nodes_"+str(n_nodes)+"/Iteration_"+str(iterations)+"/"
 
     PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
     graph_type = "Poisson <k>=" + str(k)
@@ -183,7 +183,7 @@ def main():
 
     # TESTS
     # mean_field_test()
-    simple_percolation_test()
+    # simple_percolation_test()
     percolation_test()
     multiplex_percolation_test()
 
