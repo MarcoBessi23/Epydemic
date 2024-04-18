@@ -148,7 +148,7 @@ def percolation_test():
     plot_percolation_critical_j(results, file=test+graficoJC)
 
 
-# TODO with k = 6
+# TODO with k = 6 and different graphs between PG and VG
 def multiplex_percolation_test():
     test = "MUL/Nodes_"+str(n_nodes)+"/Iteration_"+str(iterations)+"/"
 
