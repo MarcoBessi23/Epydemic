@@ -1,8 +1,8 @@
 import warnings
 
 from src.graphs import *
-from src.plot import plot_all_graphs, plot_critical_t
-from src.save_csv import save_results
+from src.plot import plot_all_graphs, plot_critical_t, plot_comparison_j_q
+from src.save_csv import save_results, load_results, load_results_mul
 from src.tests import *
 from src.config import *
 
@@ -111,6 +111,7 @@ def simple_percolation_test():
     # PLOT ALL RESULTS
     plot_critical_t(results, file=test+critical_t_plot)
 
+
 # TODO With k = 6
 def percolation_test():
     test = "PERC/Nodes_"+str(n_nodes)+"/Iteration_"+str(iterations)+"/"
@@ -185,6 +186,8 @@ def main():
     # simple_percolation_test()
     # percolation_test()
     # multiplex_percolation_test()
+    results_mul = load_results_mul("MUL/Nodes_10000/Iteration_100/Poisson-k-3.csv")
+    plot_comparison_j_q(results_mul, "test.png")
 
 
 if __name__ == "__main__":

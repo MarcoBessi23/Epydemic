@@ -5,6 +5,7 @@ from matplotlib import pyplot as plt
 from src.config import *
 from src.utils import *
 
+
 # ______________________________________________________________________________________________________________________
 # Plotting for Graphs
 
@@ -23,7 +24,7 @@ def plot_graph(G: nx.Graph, pos: dict, ax, oriented: bool = False, show: bool = 
         nx.draw(G, pos, ax=ax, node_color=blue, with_labels=True,
                 arrows=True, arrowstyle='->', arrowsize=10)
     else:
-        nx.draw(G, pos, ax=ax, node_color=blue, with_labels=True,)
+        nx.draw(G, pos, ax=ax, node_color=blue, with_labels=True, )
     if show:
         plt.show()
 
@@ -57,7 +58,8 @@ def plot_update(G: nx.Graph, pos: dict) -> None:
     :param G: graph
     :param pos: position of the nodes
     """
-    colors = [blue if G.nodes[node][state] == healthy else green if G.nodes[node][state] == recovered else red for node in G]
+    colors = [blue if G.nodes[node][state] == healthy else green if G.nodes[node][state] == recovered else red for node
+              in G]
     nx.draw(G, node_color=colors, with_labels=True, pos=pos)
     plt.pause(1)
 
@@ -83,12 +85,13 @@ def plot_critical_j(results: dict, file: str, prediction: bool = True) -> None:
                  label=graph_type, color=color, marker="", linestyle="--", linewidth=3)
         if prediction:
             plt.plot(results[graph_type][t_test], results[graph_type][j_pred],
-                     label="Theory: "+graph_type, color=black, marker="", linestyle="--", linewidth=1)
+                     label="Theory: " + graph_type, color=black, marker="", linestyle="--", linewidth=1)
     plt.xlabel("τ")
     plt.ylabel("Jc")
     plt.legend()
     plt.savefig(path_plots + file)
     plt.show()
+
 
 # ______________________________________________________________________________________________________________________
 # Plotting Percolation for j values
@@ -112,12 +115,13 @@ def plot_percolation_critical_j(results: dict, file: str, prediction: bool = Tru
                  label=graph_type, color=color, marker=".", linestyle="--")
         if prediction:
             plt.plot(results[graph_type][t_test], results[graph_type][j_pred],
-                     label="Theory: "+graph_type, color=black, marker="", linestyle="--")
+                     label="Theory: " + graph_type, color=black, marker="", linestyle="--")
     plt.xlabel("τ")
     plt.ylabel("Jc")
     plt.legend()
     plt.savefig(path_plots + file)
     plt.show()
+
 
 # ______________________________________________________________________________________________________________________
 # Plotting Percolation for c and tau values
@@ -136,7 +140,8 @@ def plot_critical_t(results: dict, file: str, prediction: bool = True) -> None:
     plt.title("Percolation in single-layered networks: N = " + str(n_nodes))
     for graph_type in results:
         color = colors.pop(0)
-        plt.plot(results[graph_type][t_test], results[graph_type][v_pred], label=graph_type, marker="", linestyle="-", color=color)
+        plt.plot(results[graph_type][t_test], results[graph_type][v_pred], label=graph_type, marker="", linestyle="-",
+                 color=color)
         if prediction:
             plt.plot(results[graph_type][t_pred][0], 0, label="Theory τc", marker="s", linestyle=" ", color=color)
     plt.xlabel("τ")
@@ -195,4 +200,26 @@ def plot_t_value_percolation(critics: dict, file: str) -> None:
     plt.show()
 
 
+# ______________________________________________________________________________________________________________________
 
+
+def plot_comparison_j_q(results: dict, file: str) -> None:
+    """
+    Plot the comparison between J and Q values
+    :param results:
+    :param file:
+    :return:
+    """
+
+    new_results = {t: {q_test: [], j_pred: []} for t in results[t_test]}
+    for i in range(len(results[t_test])):
+        new_results[results[t_test][i]][q_test].append(results[q_test][i])
+        new_results[results[t_test][i]][j_pred].append(results[j_pred][i])
+
+    plt.title("Multiplex Percolation - valuation with J and Q")
+    for t in new_results:
+        plt.plot(new_results[t][q_test], new_results[t][j_pred], label=f"τ: {t}", marker="o", linestyle="-")
+    plt.xlabel("Q")
+    plt.ylabel("Jc")
+    plt.legend()
+    plt.show()
