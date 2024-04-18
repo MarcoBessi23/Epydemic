@@ -40,25 +40,28 @@ def mean_field_test():
     kk = 6
     graph_type = "<k>=" + str(kk)
     result = mean_field_jc_test(kk, perc_init_infect, iterations, ts, js)
-    save_results(result, file=test+graph_type+".csv")
+    path_test = "k-"+str(kk)
+    save_results(result, file=test+path_test+".csv")
     results[graph_type] = result
-    plot_critical_j({graph_type: result}, file=test+graph_type+".png")
+    plot_critical_j({graph_type: result}, file=test+path_test+".png")
 
     # RANDOM GRAPH WITH K = 4
     kk = 4
     graph_type = "<k>=" + str(kk)
     result = mean_field_jc_test(kk, perc_init_infect, iterations, ts, js)
-    save_results(result, file=test+graph_type+".csv")
+    path_test = "k-"+str(kk)
+    save_results(result, file=test+path_test+".csv")
     results[graph_type] = result
-    plot_critical_j({graph_type: result}, file=test+graph_type+".png")
+    plot_critical_j({graph_type: result}, file=test+path_test+".png")
 
     # RANDOM GRAPH WITH K = 2
     kk = 2
     graph_type = "<k>=" + str(kk)
     result = mean_field_jc_test(kk, perc_init_infect, iterations, ts, js)
-    save_results(result, file=test+graph_type+".csv")
+    path_test = "k-"+str(kk)
+    save_results(result, file=test+path_test+".csv")
     results[graph_type] = result
-    plot_critical_j({graph_type: result}, file=test+graph_type+".png")
+    plot_critical_j({graph_type: result}, file=test+path_test+".png")
 
     # PLOT ALL RESULTS
     plot_critical_j(results, file=test+mean_field_jc_plot)
@@ -73,9 +76,10 @@ def simple_percolation_test():
     PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
     graph_type = "Poisson <k>=" + str(k)
     result = simple_tau_percolation_test(PG, iterations, ts)
-    save_results(result, file=test+graph_type+".csv")
+    path_test = "Poisson-k-"+str(k)
+    save_results(result, file=test+path_test+".csv")
     results[graph_type] = result
-    plot_critical_t({graph_type: result}, file=test+graph_type+".png")
+    plot_critical_t({graph_type: result}, file=test+path_test+".png")
 
     # RANDOM GRAPH WITH K*2
     kk = 2 * k
@@ -83,25 +87,28 @@ def simple_percolation_test():
     PG, VG = random_graph_test(n_nodes, pPG=prob_kk, pVG=prob_kk)
     graph_type = "Poisson <k>=" + str(kk)
     result = simple_tau_percolation_test(PG, iterations, ts)
-    save_results(result, file=test+graph_type+".csv")
+    path_test = "Poisson-k-"+str(kk)
+    save_results(result, file=test+path_test+".csv")
     results[graph_type] = result
-    plot_critical_t({graph_type: result}, file=test+graph_type+".png")
+    plot_critical_t({graph_type: result}, file=test+path_test+".png")
 
     # CYCLE GRAPH
     PG, VG = cycle_graph_test(n_nodes)
     graph_type = "Cycle"
     result = simple_tau_percolation_test(PG, iterations, ts)
-    save_results(result, file=test+graph_type+".csv")
+    path_test = "Cycle"
+    save_results(result, file=test+path_test+".csv")
     results[graph_type] = result
-    plot_critical_t({graph_type: result}, file=test+graph_type+".png")
+    plot_critical_t({graph_type: result}, file=test+path_test+".png")
 
     # SCALE FREE GRAPH WITH K
     PG, VG = scale_free_graph_test(n_nodes, mPG=k, mVG=k)
     graph_type = "Scale Free <k>=" + str(k)
     result = simple_tau_percolation_test(PG, iterations, ts)
-    save_results(result, file=test+graph_type+".csv")
+    path_test = "Scale_Free-k-"+str(k)
+    save_results(result, file=test+path_test+".csv")
     results[graph_type] = result
-    plot_critical_t({graph_type: result}, file=test+graph_type+".png")
+    plot_critical_t({graph_type: result}, file=test+path_test+".png")
 
     # PLOT ALL RESULTS
     plot_critical_t(results, file=test+critical_t_plot)
@@ -115,25 +122,28 @@ def percolation_test():
     PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
     graph_type = "Poisson <k>=" + str(k)
     result = risk_percolation_j_test(PG, iterations, ts)
-    save_results(result, file=test+graph_type+".csv")
+    path_test = "Poisson-k-"+str(k)
+    save_results(result, file=test+path_test+".csv")
     results[graph_type] = result
-    plot_percolation_critical_j({graph_type: result}, file=test+graph_type+".png")
+    plot_percolation_critical_j({graph_type: result}, file=test+path_test+".png")
 
     # CYCLE GRAPH
     PG, VG = cycle_graph_test(n_nodes)
     graph_type = "Cycle"
     result = risk_percolation_j_test(PG, iterations, ts)
-    save_results(result, file=test+graph_type+".csv")
+    path_test = "Cycle"
+    save_results(result, file=test+path_test+".csv")
     results[graph_type] = result
-    plot_percolation_critical_j({graph_type: result}, file=test+graph_type+".png")
+    plot_percolation_critical_j({graph_type: result}, file=test+path_test+".png")
 
     # SCALE FREE GRAPH WITH K
     PG, VG = scale_free_graph_test(n_nodes, mPG=k, mVG=k)
     graph_type = "Scale Free <k>=" + str(k)
     result = risk_percolation_j_test(PG, iterations, ts)
-    save_results(result, file=test+graph_type+".csv")
+    path_test = "Scale_Free-k-"+str(k)
+    save_results(result, file=test+path_test+".csv")
     results[graph_type] = result
-    plot_percolation_critical_j({graph_type: result}, file=test+graph_type+".png")
+    plot_percolation_critical_j({graph_type: result}, file=test+path_test+".png")
 
     # PLOT ALL RESULTS
     plot_percolation_critical_j(results, file=test+graficoJC)
@@ -145,20 +155,23 @@ def multiplex_percolation_test():
     PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
     graph_type = "Poisson <k>=" + str(k)
     results = multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
-    save_results(results, file=test+graph_type+".csv")
-    plot_q_value(results, file=test+graph_type+".png")
+    path_test = "Poisson-k-"+str(k)
+    save_results(results, file=test+path_test+".csv")
+    plot_q_value(results, file=test+path_test+".png")
 
     PG, VG = cycle_graph_test(n_nodes)
     graph_type = "Cycle"
     results = multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
-    save_results(results, file=test+graph_type+".csv")
-    plot_q_value(results, file=test+graph_type+".png")
+    path_test = "Cycle"
+    save_results(results, file=test+path_test+".csv")
+    plot_q_value(results, file=test+path_test+".png")
 
     PG, VG = scale_free_graph_test(n_nodes, mPG=k, mVG=k)
     graph_type = "Scale Free <k>=" + str(k)
     results = multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
-    save_results(results, file=test+graph_type+".csv")
-    plot_q_value(results, file=test+graph_type+".png")
+    path_test = "Scale_Free-k-"+str(k)
+    save_results(results, file=test+path_test+".csv")
+    plot_q_value(results, file=test+path_test+".png")
 
 
 def main():
@@ -169,7 +182,7 @@ def main():
     # test_graphs()
 
     # TESTS
-    mean_field_test()
+    # mean_field_test()
     simple_percolation_test()
     percolation_test()
     multiplex_percolation_test()
