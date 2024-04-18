@@ -31,7 +31,6 @@ def test_graphs():
     plot_all_graphs(PG, VG, IG)
 
 
-# TODO Test with different values of initial infected
 def mean_field_test():
     test = "MF/"
     results = {}
@@ -67,7 +66,6 @@ def mean_field_test():
     plot_critical_j(results, file=test+mean_field_jc_plot)
 
 
-# TODO Test with different values of k and different number of nodes and initial infected
 def simple_percolation_test():
     test = "SIM/"+str(n_nodes)+"/"
     results = {}
@@ -113,7 +111,7 @@ def simple_percolation_test():
     # PLOT ALL RESULTS
     plot_critical_t(results, file=test+critical_t_plot)
 
-
+# TODO With k = 6
 def percolation_test():
     test = "PERC/Nodes_"+str(n_nodes)+"/Iteration_"+str(iterations)+"/"
     results = {}
@@ -149,6 +147,7 @@ def percolation_test():
     plot_percolation_critical_j(results, file=test+graficoJC)
 
 
+# TODO with k = 6
 def multiplex_percolation_test():
     test = "MUL/Nodes_"+str(n_nodes)+"/Iteration_"+str(iterations)+"/"
 
@@ -184,8 +183,8 @@ def main():
     # TESTS
     # mean_field_test()
     # simple_percolation_test()
-    percolation_test()
-    multiplex_percolation_test()
+    # percolation_test()
+    # multiplex_percolation_test()
 
 
 if __name__ == "__main__":
