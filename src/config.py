@@ -14,7 +14,7 @@ eps = 1e-4  # Epsilon
 
 # Values for the graph
 n_nodes = 10000  # Number of nodes
-k = 3  # Number of edges to attach from a new node
+k = 6  # Number of edges to attach from a new node
 prob_k = k / n_nodes  # Probability for random graph
 
 # Values for the infection

@@ -126,6 +126,7 @@ def percolation_test():
     results[graph_type] = result
     plot_percolation_critical_j({graph_type: result}, file=test+path_test+".png")
 
+    """
     # CYCLE GRAPH
     PG, VG = cycle_graph_test(n_nodes)
     graph_type = "Cycle"
@@ -134,6 +135,7 @@ def percolation_test():
     save_results(result, file=test+path_test+".csv")
     results[graph_type] = result
     plot_percolation_critical_j({graph_type: result}, file=test+path_test+".png")
+    """
 
     # SCALE FREE GRAPH WITH K
     PG, VG = scale_free_graph_test(n_nodes, mPG=k, mVG=k)
@@ -145,7 +147,7 @@ def percolation_test():
     plot_percolation_critical_j({graph_type: result}, file=test+path_test+".png")
 
     # PLOT ALL RESULTS
-    plot_percolation_critical_j(results, file=test+graficoJC)
+    plot_percolation_critical_j(results, file=test+str(k)+graficoJC)
 
 
 # TODO with k = 6 and different graphs between PG and VG
@@ -159,17 +161,27 @@ def multiplex_percolation_test():
     save_results(results, file=test+path_test+".csv")
     plot_q_value(results, file=test+path_test+".png")
 
+    """
     PG, VG = cycle_graph_test(n_nodes)
     graph_type = "Cycle"
     results = multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
     path_test = "Cycle"
     save_results(results, file=test+path_test+".csv")
     plot_q_value(results, file=test+path_test+".png")
+    """
 
     PG, VG = scale_free_graph_test(n_nodes, mPG=k, mVG=k)
     graph_type = "Scale Free <k>=" + str(k)
     results = multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
     path_test = "Scale_Free-k-"+str(k)
+    save_results(results, file=test+path_test+".csv")
+    plot_q_value(results, file=test+path_test+".png")
+
+    PG, _ = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
+    _, VG = scale_free_graph_test(n_nodes, mPG=k, mVG=k)
+    graph_type = "Poisson <k>=" + str(k) + " and Scale Free <k>=" + str(k)
+    results = multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
+    path_test = "Poisson-k-"+str(k)+"_Scale_Free-k-"+str(k)
     save_results(results, file=test+path_test+".csv")
     plot_q_value(results, file=test+path_test+".png")
 
@@ -184,10 +196,10 @@ def main():
     # TESTS
     # mean_field_test()
     # simple_percolation_test()
-    # percolation_test()
-    # multiplex_percolation_test()
-    results_mul = load_results_mul("MUL/Nodes_10000/Iteration_100/Poisson-k-3.csv")
-    plot_comparison_j_q(results_mul, "test.png")
+    percolation_test()
+    multiplex_percolation_test()
+    # results_mul = load_results_mul("MUL/Nodes_10000/Iteration_100/Poisson-k-3.csv")
+    # plot_comparison_j_q(results_mul, "test.png")
 
 
 if __name__ == "__main__":
