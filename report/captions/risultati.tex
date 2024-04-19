@@ -35,6 +35,13 @@
     presenza di auto organizzazione critica del sistema.
     Questo ci fornisce un metodo automatico per determinare il livello critico della percezione del rischio, evitando la
     necessità di regolare manualmente i parametri di controllo attraverso numerose simulazioni.
+    Ciascun nodo impara il proprio valore critico di $J$ dopo un certo numero di iterazioni, ad ogni iterazione
+    viene aggiornato $J$ basandosi sull'informazione fornita dal valore precedente e dallo stato dei suoi vicini, in
+    questo aspetto il meccanismo di percolazione somiglia a quello di una rete ricorrente su grafi, in cui lo stato dei
+    vari nodi viene aggiornato tramite una funzione ricorsiva che, dipende dagli stati precedenti e dal segnale fornito dai
+    vicini. Anche per questo tipo di reti il numero delle iterazioni non può essere troppo alto per evitare il fenomeno
+    dell'oversmoothing che, semplificando, vanifica l'apprendimento facendo convergere tutti i nodi ad uno stesso valore, similmente a quanto 
+    si osserva nella percolazione con gli absorbing state.
     % FIXME Check if is okay
     In questo caso è interessante notare come al crescere di $\tau$ oltre la soglia critica ci sia sempre un $J$ per cui è
     possibile arrestare la diffusione dell'epidemia.
