@@ -3,7 +3,7 @@ from src.utils import *
 
 # Values for the tests
 step = 0.1  # Step for the values
-max_j = 1000  # Maximum value for the risk perception
+max_j = 100  # Maximum value for the risk perception
 js = np.arange(0, max_j, step)  # Risk perception
 ts = np.arange(0, 1 + step, step)  # Tau values
 qs = np.arange(0, 1 + step, step)  # Connection probability for Information Graph

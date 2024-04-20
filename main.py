@@ -152,26 +152,24 @@ def percolation_test():
 
 # TODO with k = 6 and different graphs between PG and VG
 def multiplex_percolation_test():
-    test = "MUL/Nodes_"+str(n_nodes)+"/Iteration_"+str(iterations)+"/"
+    test = "MUL/Nodes_"+str(n_nodes)+"/Iteration_"+str(iterations)+"/"+str(k)
 
     PG, VG = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
-    graph_type = "Poisson <k>=" + str(k)
+    # graph_type = "Poisson <k>=" + str(k)
     results = multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
     path_test = "Poisson-k-"+str(k)
     save_results(results, file=test+path_test+".csv")
     plot_q_value(results, file=test+path_test+".png")
 
-    """
     PG, VG = cycle_graph_test(n_nodes)
-    graph_type = "Cycle"
+    # graph_type = "Cycle"
     results = multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
     path_test = "Cycle"
     save_results(results, file=test+path_test+".csv")
     plot_q_value(results, file=test+path_test+".png")
-    """
 
     PG, VG = scale_free_graph_test(n_nodes, mPG=k, mVG=k)
-    graph_type = "Scale Free <k>=" + str(k)
+    # graph_type = "Scale Free <k>=" + str(k)
     results = multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
     path_test = "Scale_Free-k-"+str(k)
     save_results(results, file=test+path_test+".csv")
@@ -179,7 +177,7 @@ def multiplex_percolation_test():
 
     PG, _ = random_graph_test(n_nodes, pPG=prob_k, pVG=prob_k)
     _, VG = scale_free_graph_test(n_nodes, mPG=k, mVG=k)
-    graph_type = "Poisson <k>=" + str(k) + " and Scale Free <k>=" + str(k)
+    # graph_type = "Poisson <k>=" + str(k) + " and Scale Free <k>=" + str(k)
     results = multiplex_percolation_jc_test(PG, VG, iterations, ts, qs)
     path_test = "Poisson-k-"+str(k)+"_Scale_Free-k-"+str(k)
     save_results(results, file=test+path_test+".csv")
@@ -196,7 +194,7 @@ def main():
     # TESTS
     # mean_field_test()
     # simple_percolation_test()
-    percolation_test()
+    # percolation_test()
     multiplex_percolation_test()
     # results_mul = load_results_mul("MUL/Nodes_10000/Iteration_100/Poisson-k-3.csv")
     # plot_comparison_j_q(results_mul, "test.png")
