@@ -5,7 +5,7 @@
     critico di $J$, sia nel caso teorico che in quello pratico, confermando la validità teorica del metodo.
 
     \begin{figure}[H]
-        \includegraphics[width=\textwidth]{mf_critical_j}\caption{Mean-field approximation}
+        \includegraphics[width=\textwidth]{MF/mf_critical_j}\caption{Mean-field approximation}
         \label{fig:mf_critical_j}
     \end{figure}
 
@@ -17,10 +17,10 @@
 
     \begin{figure}[H]
         \begin{minipage}{0.5\textwidth}
-            \includegraphics[width=\linewidth]{critical_t}\label{fig:prob_percolation}
+            \includegraphics[width=\linewidth]{SIM/Nodes_10000/critical_t}\label{fig:prob_percolation}
         \end{minipage}
         \begin{minipage}{0.5\textwidth}
-            \includegraphics[width=\linewidth]{critical_t}\label{fig:prob_percolation_2}
+            \includegraphics[width=\linewidth]{SIM/critical_t}\label{fig:prob_percolation_2}
         \end{minipage}
         \caption{Valutazione della probabilità di percolazione}
     \end{figure}
@@ -39,15 +39,16 @@
     viene aggiornato $J$ basandosi sull'informazione fornita dal valore precedente e dallo stato dei suoi vicini, in
     questo aspetto il meccanismo di percolazione somiglia a quello di una rete ricorrente su grafi, in cui lo stato dei
     vari nodi viene aggiornato tramite una funzione ricorsiva che, dipende dagli stati precedenti e dal segnale fornito dai
-    vicini. Anche per questo tipo di reti il numero delle iterazioni non può essere troppo alto per evitare il fenomeno
-    dell'oversmoothing che, semplificando, vanifica l'apprendimento facendo convergere tutti i nodi ad uno stesso valore, similmente a quanto 
-    si osserva nella percolazione con gli absorbing state.
+    vicini.
+    Anche per questo tipo di reti il numero delle iterazioni non può essere troppo alto per evitare il fenomeno
+    dell'oversmoothing che, semplificando, vanifica l'apprendimento facendo convergere tutti i nodi a uno stesso valore,
+    similmente a quanto si osserva nella percolazione con gli absorbing state.
     % FIXME Check if is okay
     In questo caso è interessante notare come al crescere di $\tau$ oltre la soglia critica ci sia sempre un $J$ per cui è
     possibile arrestare la diffusione dell'epidemia.
 
     \begin{figure}[H]
-        \includegraphics[width=\textwidth]{graficoJC}\caption{Confronto self percolation and simulation}
+        \includegraphics[width=\textwidth]{PERC/Nodes_10000/Iteration_100/graficoJC}\caption{Confronto self percolation and simulation}
         \label{fig:graficoJC}
     \end{figure}
 
@@ -61,6 +62,6 @@
     possiamo osservare come la curva della soglia di percolazione approssimi un'iperbole.
 
     \begin{figure}[H]
-        \includegraphics[width=\textwidth]{q_plot}\caption{Diagramma di fase al variare di q e $\tau$}
+        \includegraphics[width=\textwidth]{MUL/Nodes_10000/Iteration_100/6Poisson-k-6}\caption{Diagramma di fase al variare di q e $\tau$}
         \label{fig:diagram_phase}
     \end{figure}
