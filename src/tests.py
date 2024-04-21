@@ -5,9 +5,7 @@ from src.config import zero_threshold
 from src.graphs import get_information_graph
 from src.infection import get_critical_j, get_average_graph_degree
 from src.mean_field import simulated_mean_field_infection
-from src.plot import plot_critical_j, plot_q_value, plot_percolation_critical_j
-from src.percolation import (critic_j_percolation, tau_simple_percolation, multiplex_percolation,
-                             simulated_j_percolation, simulated_simple_percolation, critic_j_percolation,
+from src.percolation import (tau_simple_percolation, simulated_simple_percolation, critic_j_percolation,
                              multiplex_percolation)
 from src.utils import *
 

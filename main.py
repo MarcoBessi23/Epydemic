@@ -1,7 +1,7 @@
 import warnings
 
 from src.graphs import *
-from src.plot import plot_all_graphs, plot_critical_t, plot_comparison_j_q
+from src.plot import plot_all_graphs, plot_critical_t, plot_comparison_j_q, plot_critical_j, plot_percolation_critical_j
 from src.save_csv import save_results, load_results, load_results_mul
 from src.tests import *
 from src.config import *

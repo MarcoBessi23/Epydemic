@@ -5,24 +5,19 @@
     critico di $J$, sia nel caso teorico che in quello pratico, confermando la validità teorica del metodo.
 
     \begin{figure}[H]
-        \includegraphics[width=\textwidth]{MF/mfjcs-it10000}\caption{Mean-field approximation}
+        \includegraphics[width=\textwidth]{MF/mfjcs-it10000}\caption{Approssimazione di campo medio al variare di $k$}
         \label{fig:mf_critical_j}
     \end{figure}
 
 \subsection{Simple percolation}\label{subsec:res-simple-percolation}
     In questo caso abbiamo fatto varie simulazioni in base al numero di nodi e al valore di connettività $k$.
-    I risultati mostrati in ~\ref{fig:prob_percolation} e ~\ref{fig:prob_percolation_2} mostrano i risultati ottenuti.
-    Anche in questo caso siamo riusciti a ottenere che i valori predetti dalla formula sono molto vicini a
-    quelli che si osservano simulando l'infezione.
+    I risultati in ~\ref{fig:prob_percolation_n10000} mostrano come anche in questo caso siamo riusciti a ottenere che
+    i valori predetti dalla formula sono molto vicini a quelli che si osservano simulando l'infezione.
 
     \begin{figure}[H]
-        \begin{minipage}{0.5\textwidth}
-            \includegraphics[width=\linewidth]{/C:/Users/loreb/Documents/IntellijProjects/PycharmProjects/Epydemic/results/plots/SIM/tcs-nodes10000_it10000}\label{fig:prob_percolation}
-        \end{minipage}
-        \begin{minipage}{0.5\textwidth}
-            \includegraphics[width=\linewidth]{SIM/tcs-nodes50_it10000}\label{fig:prob_percolation_2}
-        \end{minipage}
-        \caption{Valutazione della probabilità di percolazione}
+        \includegraphics[width=\linewidth]{SIM/tcs-nodes10000_it10000}
+        \caption{Valutazione della probabilità di percolazione al variare della tipologia di grafo e del numero di nodi}
+        \label{fig:prob_percolation_n10000}
     \end{figure}
 
 \subsection{Infezione percezione del rischio}\label{subsec:res-infezione-con-la-percezione-del-rischio}
@@ -48,12 +43,19 @@
     possibile arrestare la diffusione dell'epidemia.
 
     \begin{figure}[H]
-        \includegraphics[width=\textwidth]{/C:/Users/loreb/Documents/IntellijProjects/PycharmProjects/Epydemic/results/plots/PERC/percjcs-k3_nodes10000_it100}\caption{Confronto self percolation and simulation}
-        \label{fig:graficoJC}
+        \includegraphics[width=\textwidth]{PERC/percjcs-k3_nodes10000_it100}
+        \caption{Confronto self percolation and simulation con $n=10000$ e 100 iterazioni}
+        \label{fig:perc_jcs_k_3}
+    \end{figure}
+
+    \begin{figure}[H]
+        \includegraphics[width=\textwidth]{PERC/percjcs-k6_nodes10000_it100}
+        \caption{Confronto self percolation and simulation con $n=10000$ e 100 iterazioni}
+        \label{fig:perc_jcs_k_6}
     \end{figure}
 
 \subsection{Multiplex networks}\label{subsec:res-multiplex-networks}
-    I risultati ottenuti dalla simulazione del modello multiplex sono mostrati in figura ~\ref{fig:diagram_phase}.
+    I risultati ottenuti dalla simulazione del modello multiplex sono mostrati in figura ~\ref{fig:diagram_phase_poisson_k_6_jm_100}.
     Nei diagrammi di fase, notiamo che con un valore $\tau$ sufficientemente elevato, esiste sempre una soglia critica
     di $q$ oltre la quale è virtualmente impossibile arrestare l'epidemia.
     L'aumento di $t$ e $q$ comporta una diffusione dell'infezione sempre più ampia e difficile da contenere,
@@ -62,6 +64,15 @@
     possiamo osservare come la curva della soglia di percolazione approssimi un'iperbole.
 
     \begin{figure}[H]
-        \includegraphics[width=\textwidth]{/C:/Users/loreb/Documents/IntellijProjects/PycharmProjects/Epydemic/results/plots/MUL/Poisson-k6_nodes10000_it100_jm100}\caption{Diagramma di fase al variare di q e $\tau$}
-        \label{fig:diagram_phase}
+        \centering
+        \includegraphics[width=0.8\textwidth]{MUL/Poisson-k6_nodes10000_it100_jm100}
+        \caption{Diagramma di fase al variare di $q$ e $\tau$: grafo Poisson con $k=6$, nodi 10000, iterazioni 100. Valore di $J_{\max} = 100$}
+        \label{fig:diagram_phase_poisson_k_6_jm_100}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{MUL/Poisson-k6_nodes10000_it100_jminf}
+        \caption{Diagramma di fase al variare di $q$ e $\tau$: grafo Poisson con $k=6$, nodi 10000, iterazioni 100. Valore di $J_{\max} = \inf$}
+        \label{fig:digram_phase_poisson_k_6_jm_inf}
     \end{figure}
