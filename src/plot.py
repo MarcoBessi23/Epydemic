@@ -217,9 +217,18 @@ def plot_comparison_j_q(results: dict, file: str) -> None:
         new_results[results[t_test][i]][j_pred].append(results[j_pred][i])
 
     plt.title("Multiplex Percolation - valuation with J and Q")
-    for t in new_results:
-        plt.plot(new_results[t][q_test], new_results[t][j_pred], label=f"τ: {t}", marker="o", linestyle="-")
+    # for t in new_results:
+    #     plt.plot(new_results[t][q_test], new_results[t][j_pred], label=f"τ: {round(t,2)}", marker="o", linestyle="-")
+
+    t = 0.2
+    plt.plot(new_results[t][q_test], new_results[t][j_pred], label=f"τ: {round(t, 2)}", marker="o", linestyle="-")
+    t = 0.4
+    plt.plot(new_results[t][q_test], new_results[t][j_pred], label=f"τ: {round(t, 2)}", marker="o", linestyle="-")
+    t = 0.8
+    plt.plot(new_results[t][q_test], new_results[t][j_pred], label=f"τ: {round(t, 2)}", marker="o", linestyle="-")
+
     plt.xlabel("Q")
     plt.ylabel("Jc")
     plt.legend()
+    plt.savefig(path_plots + "MUL/" + file)
     plt.show()

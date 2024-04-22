@@ -1,7 +1,8 @@
 import warnings
 
 from src.graphs import *
-from src.plot import plot_all_graphs, plot_critical_t, plot_comparison_j_q, plot_critical_j, plot_percolation_critical_j
+from src.plot import plot_all_graphs, plot_critical_t, plot_comparison_j_q, plot_critical_j, \
+    plot_percolation_critical_j, plot_q_value
 from src.save_csv import save_results, load_results, load_results_mul
 from src.tests import *
 from src.config import *
@@ -188,6 +189,37 @@ def multiplex_percolation_test():
     # plot_comparison_j_q(results, "comparisonjq"+path_test+".png")
 
 
+def visualize_comparison():
+    # Load results con jminf
+    """
+    results = load_results_mul("MUL/Cycle-nodes10000_it100_jminf.csv")
+    plot_comparison_j_q(results, "comparisonjq-Cycle-nodes10000_it100_jminf.png")
+
+    results = load_results_mul("MUL/Poisson-k3_nodes10000_it100_jminf.csv")
+    plot_comparison_j_q(results, "comparisonjq-Poisson-k3_nodes10000_it100_jminf.png")
+
+    results = load_results_mul("MUL/ScaleFree-k3_nodes10000_it100_jminf.csv")
+    plot_comparison_j_q(results, "comparisonjq-ScaleFree-k3_nodes10000_it100_jminf.png")
+
+    results = load_results_mul("MUL/Poisson-k6+ScaleFree-k6_nodes10000_it100_jminf.csv")
+    plot_comparison_j_q(results, "comparisonjq-Poisson-k6+ScaleFree-k6_nodes10000_it100_jminf.png")
+    """
+
+    # Load results con jm100
+
+    results = load_results_mul("MUL/Cycle-nodes10000_it100_jm100.csv")
+    plot_comparison_j_q(results, "zcjq-Cycle-nodes10000_it100_jm100.png")
+
+    results = load_results_mul("MUL/Poisson-k6_nodes10000_it100_jm100.csv")
+    plot_comparison_j_q(results, "zcjq-Poisson-k3_nodes10000_it100_jm100.png")
+
+    results = load_results_mul("MUL/ScaleFree-k6_nodes10000_it100_jm100.csv")
+    plot_comparison_j_q(results, "zcjq-ScaleFree-k3_nodes10000_it100_jm100.png")
+
+    results = load_results_mul("MUL/Poisson-k6+ScaleFree-k6_nodes10000_it100_jm100.csv")
+    plot_comparison_j_q(results, "zcjq-Poisson-k6+ScaleFree-k6_nodes10000_it100_jm100.png")
+
+
 def main():
     # Ignore warnings
     warnings.filterwarnings("ignore")
@@ -200,6 +232,7 @@ def main():
     # simple_percolation_test()
     # percolation_test()
     # multiplex_percolation_test()
+    visualize_comparison()
 
 
 if __name__ == "__main__":
